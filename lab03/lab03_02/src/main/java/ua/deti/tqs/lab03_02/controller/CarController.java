@@ -1,6 +1,7 @@
 package ua.deti.tqs.lab03_02.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.deti.tqs.lab03_02.entity.Car;
@@ -16,16 +17,23 @@ public class CarController {
 
     @PostMapping
     public ResponseEntity<Car> createCar(@RequestBody Car car) {
-        return null;
+        Car response = carManagerService.save(car);
+        if (response == null) return ResponseEntity.badRequest().build();
+
+        return  new ResponseEntity<Car>(response, HttpStatus.CREATED);
     }
 
     @GetMapping
     public List<Car> getAllCars() {
-        return null;
+        return carManagerService.getAllCars();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Car> getCarById(@PathVariable("id") Long id) {
-        return null;
+        Car response = carManagerService.getCarDetails(id).orElse(null);
+
+        if (response == null) return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(response);
     }
 }

@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -27,16 +27,16 @@ public class CarManagerServiceTest {
     @InjectMocks
     private CarManagerService carManagerService;
 
-    private final Car car1 = new Car("maker1", "model1");
-
     @BeforeEach
     public void setUp() {
+        Car car1 = new Car("maker1", "model1");
+        car1.setCarId(1L);
         Car car2 = new Car("maker2", "model2");
         Car car3 = new Car("maker3", "model3");
 
-        List<Car> allCars = Arrays.asList(car1, car2, car3);
 
-        Mockito.when(carRepository.findByCarId(car1.getCarId())).thenReturn(car1);
+        List<Car> allCars = Arrays.asList(car1, car2, car3);
+        Mockito.when(carRepository.findByCarId(1L)).thenReturn(car1);
         Mockito.when(carRepository.findByCarId(12345L)).thenReturn(null);
         Mockito.when(carRepository.findByCarId(-99L)).thenReturn(null);
         Mockito.when(carRepository.findAll()).thenReturn(allCars);
@@ -45,8 +45,12 @@ public class CarManagerServiceTest {
 
     @Test
     void whenValidId_thenCarShouldBeFound() {
-        Car found = carManagerService.getCarDetails(car1.getCarId()).get();
-        assert(found).equals(car1);
+        Car found = carManagerService.getCarDetails(1L).get();
+
+        assertThat(found).isNotNull();
+        assertThat(found.getMaker()).isEqualTo("maker1");
+        assertThat(found.getModel()).isEqualTo("model1");
+
     }
 
     @Test
@@ -54,5 +58,13 @@ public class CarManagerServiceTest {
         Car fromDb = carManagerService.getCarDetails(12345L).orElse(null);
         assertThat(fromDb).isNull();
 
+    }
+
+    @Test
+    void given3Cars_whenGetAll_thenReturn3Records() {
+
+        List<Car> allCars = carManagerService.getAllCars();
+        assertThat(allCars).hasSize(3).extracting(Car::getMaker)
+                .contains("maker1", "maker2", "maker3");
     }
 }

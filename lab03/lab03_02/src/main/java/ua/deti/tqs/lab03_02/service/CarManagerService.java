@@ -17,15 +17,21 @@ public class CarManagerService {
 
 
     public Car save(Car car) {
-        return null;
+        if (
+            car == null || carRepository.findByCarId(car.getCarId()) != null
+        ) return null;
+
+        carRepository.save(car);
+        return car;
     }
 
     public List<Car> getAllCars() {
-        return null;
+        return carRepository.findAll();
     }
 
     public Optional<Car> getCarDetails(Long id) {
-        return null;
+        return Optional.ofNullable(carRepository.findByCarId(id));
+
     }
 
 

@@ -1,9 +1,11 @@
 package ua.deti.tqs.lab03_02.unit;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ua.deti.tqs.lab03_02.controller.CarController;
@@ -28,6 +30,7 @@ public class CarControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
     private CarManagerService carManagerService;
 
     @Test
@@ -66,20 +69,5 @@ public class CarControllerTest {
     }
 
 
-    // test for getCarById HOW TO DO THIS?
-//    @Test
-//    void givenCarId_whenGetCarById_thenReturnJson() throws Exception {
-//        Car car = new Car("maker", "model");
-//        car.setId(1L);
-//
-//        when(carManagerService.getCarDetails(1L)).thenReturn(car);
-//
-//        mockMvc.perform(get("/api/v1/car/1"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.maker", is(car.getMaker())))
-//                .andExpect(jsonPath("$.model", is(car.getModel()));
-//
-//        verify(carManagerService, times(1)).getCarDetails(1L);
-//    }
 
 }
