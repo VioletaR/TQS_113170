@@ -19,8 +19,8 @@ public class Library {
 		end.setTime(to);
 		end.roll(Calendar.YEAR, 1);
 
-		return store.stream().filter(book -> {
-			return from.before(book.getPublished()) && end.getTime().after(book.getPublished());
-		}).sorted(Comparator.comparing(Book::getPublished).reversed()).collect(Collectors.toList());
+		return store.stream()
+				.filter(book -> from.before(book.getPublished()) && end.getTime().after(book.getPublished()))
+				.sorted(Comparator.comparing(Book::getPublished).reversed()).collect(Collectors.toList());
 	}
 }

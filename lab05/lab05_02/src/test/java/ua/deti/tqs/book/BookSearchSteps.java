@@ -20,13 +20,13 @@ public class BookSearchSteps {
 	List<Book> result = new ArrayList<>();
 
 	@Given(".+book with the title '{string}', written by '{string}', published in {string}")
-	public void addNewBook() {
-		Book book = new Book(title, author, published);
+	public void addBooks() {
+
 		library.addBook(book);
 	}
 
 	@When("the customer searches for books published between {int} and {int}")
-	public void setSearchParameters(@Format("yyyy") final Date from, @Format("yyyy") final Date to) {
+	public void setSearchParameters(final Date from, @Format("yyyy") final Date to) {
 		result = library.findBooks(from, to);
 	}
 
@@ -35,7 +35,7 @@ public class BookSearchSteps {
 		assertThat(result.size(), equalTo(booksFound));
 	}
 
-	@Then("Book {int} should have the title '{string}'")
+	@Then("Book {int} should have the title {string}")
 	public void verifyBookAtPosition(final int position, final String title) {
 		assertThat(result.get(position - 1).getTitle(), equalTo(title));
 	}
