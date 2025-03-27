@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a95f3941-750e-453d-a2b3-8d76862c3e73" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../lab06_01/src/main/java/ua/deti/tqs/lab06_01/entity/Book.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lab06_01/src/main/java/ua/deti/tqs/lab06_01/repo/BookRepo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lab06_01/src/main/resources/db/migration/V001__INIT.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lab06_02/src/main/java/ua/deti/tqs/lab06_02/entity/Book.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lab06_02/src/main/java/ua/deti/tqs/lab06_02/repo/BookRepo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lab06_02/src/main/resources/db/migration/V001__INIT.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lab06_02/src/test/java/ua/deti/tqs/lab06_02/ApplicationTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lab06_02/src/test/java/ua/deti/tqs/lab06_02/TestcontainersConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/ua/deti/tqs/PublicRestServicesTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lab06_04/src/main/java/ua/deti/tqs/lab06_04/controller/CarController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lab06_04/src/main/java/ua/deti/tqs/lab06_04/entity/Car.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lab06_04/src/main/java/ua/deti/tqs/lab06_04/service/CarManagerService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lab06_04/src/main/java/ua/deti/tqs/lab06_04/service/CarRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lab06_04/src/test/java/ua/deti/tqs/lab06_04/asdfadsf.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2ucurIQDDD6PacmTV7HabiZfvgP" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.PublicRestServicesTest.executor": "Run",
+    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/violeta/Downloads/TQS/TQS_113170/lab06/lab06_04",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="JUnit.PublicRestServicesTest">
+    <configuration name="PublicRestServicesTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="lab06_03" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ua.deti.tqs.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ua.deti.tqs" />
+      <option name="MAIN_CLASS_NAME" value="ua.deti.tqs.PublicRestServicesTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Lab0603Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="lab06_03" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ua.deti.tqs.lab06_03.Lab0603Application" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.PublicRestServicesTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a95f3941-750e-453d-a2b3-8d76862c3e73" name="Changes" comment="" />
+      <created>1742560382386</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1742560382386</updated>
+      <workItem from="1742560383470" duration="288000" />
+      <workItem from="1743114780249" duration="440000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
