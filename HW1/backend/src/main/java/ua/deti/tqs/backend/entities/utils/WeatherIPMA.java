@@ -13,6 +13,6 @@ public class WeatherIPMA {
     private String tempMax;
     private String windDirection;
     private String precipitationProb;
-    private Integer typeOfWeatherId;
-    private Integer precipitationIntensity;
+    private int typeOfWeatherId;
+    private int precipitationIntensity;
 }

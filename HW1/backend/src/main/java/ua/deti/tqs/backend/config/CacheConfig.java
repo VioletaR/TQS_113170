@@ -1,6 +1,7 @@
 package ua.deti.tqs.backend.config;
 
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,7 +17,7 @@ public class CacheConfig {
 
     @Bean
     public CacheManager cacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("districtsCache", "forecastCache");
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager("districtsCache", "forecastCache", "districtIdCache");
         cacheManager.setCaffeine(Caffeine.newBuilder()
                 .expireAfterWrite(10, TimeUnit.MINUTES)
                 .maximumSize(100));

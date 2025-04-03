@@ -47,7 +47,7 @@ public class MealController {
         Meal meal = mealService.getMealById(id);
 
         if (meal != null) {
-            MealDTO mealDTO = new MealDTO(weatherService).mapToDTO(meal);
+            MealDTO mealDTO = MealDTO.fromMeal(meal, weatherService);
             return ResponseEntity.ok(mealDTO);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -60,7 +60,7 @@ public class MealController {
         List<Meal> meals = mealService.getAllMealsByRestaurantId(restaurantId);
 
         List<MealDTO> mealDTOs = meals.stream()
-                .map(meal -> new MealDTO(weatherService).mapToDTO(meal))
+                .map(meal ->  MealDTO.fromMeal(meal, weatherService))
                 .toList();
 
         return ResponseEntity.ok(mealDTOs);
