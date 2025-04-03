@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import ua.deti.tqs.backend.utils.Constants;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(Constants.API_PATH_PRIVATE_V1 +"user-meal")
 @Tag(name = "UserMeals", description = "The UserMeals API")
@@ -35,9 +37,16 @@ public class UserMealController {
             @ApiResponse(responseCode = "400", description = "Invalid request body")
     })
     public ResponseEntity<UserMeal> createUserMeal(@RequestBody UserMeal meal) {
+        log.info("Creating a new userMeal");
 
         UserMeal newUserMeal = userMealService.createUserMeal(meal);
         HttpStatus status = newUserMeal != null ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
+
+        if (newUserMeal != null) {
+            log.info("UserMeal created successfully with ID: {}", newUserMeal.getId());
+        } else {
+            log.warn("Failed to create userMeal");
+        }
         return new ResponseEntity<>(newUserMeal, status);
     }
 
@@ -48,12 +57,19 @@ public class UserMealController {
             @ApiResponse(responseCode = "404", description = "UserMeal not found")
     })
     public ResponseEntity<UserMealDTO> getUserMeal(@PathVariable("id") Long id) {
+        log.info("Fetching a userMeal by ID: {}", id);
+
         UserMeal userMeal = userMealService.getUserMealById(id);
 
         if (userMeal != null) {
+            log.info("UserMeal found with ID: {}", userMeal.getId());
             UserMealDTO userMealDTO = UserMealDTO.fromUserMeal(userMeal,weatherService);
+
+            log.info("Sent UserMealDTO successfully for userMeal ID: {}", userMeal.getId());
             return ResponseEntity.ok(userMealDTO);
         }
+
+        log.warn("UserMeal not found with ID: {}", id);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
     }
@@ -62,6 +78,8 @@ public class UserMealController {
     @Operation(summary = "Get all UserMeals", description = "Fetches a list of all UserMeals per user id.")
     @ApiResponse(responseCode = "200", description = "List of UserMeals retrieved successfully")
     public ResponseEntity<List<UserMealDTO>> getAllMealsByRestaurantId(@PathVariable("userId") Long userId) {
+        log.info("Fetching all userMeals for user ID: {}", userId);
+
         List<UserMeal> userMeals = userMealService.getAllUserMealsByUserId(userId);
 
 
@@ -69,6 +87,7 @@ public class UserMealController {
                 .map(userMeal -> UserMealDTO.fromUserMeal(userMeal,weatherService))
                 .toList();
 
+        log.info("Sent UserMealDTOs successfully for user ID: {}", userId);
         return ResponseEntity.ok(userMealDTOs);
     }
 
@@ -79,8 +98,16 @@ public class UserMealController {
             @ApiResponse(responseCode = "400", description = "Invalid request body")
     })
     public ResponseEntity<UserMeal> updateUserMeal(@RequestBody UserMeal userMeal) {
+        log.info("Updating userMeal with ID: {}", userMeal.getId());
+
         UserMeal updateUserMeal = userMealService.updateUserMeal(userMeal);
         HttpStatus status = updateUserMeal != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+
+        if (updateUserMeal != null) {
+            log.info("UserMeal updated successfully with ID: {}", updateUserMeal.getId());
+        } else {
+            log.warn("Failed to update userMeal with ID: {}", userMeal.getId());
+        }
         return new ResponseEntity<>(updateUserMeal, status);
     }
 
@@ -91,7 +118,15 @@ public class UserMealController {
             @ApiResponse(responseCode = "404", description = "UserMeal not found")
     })
     public ResponseEntity<Void> deleteUserMeal(@PathVariable("id") Long id) {
+        log.info("Deleting userMeal with ID: {}", id);
+
         boolean result = userMealService.deleteUserMealById(id);
+
+        if (result) {
+            log.info("UserMeal deleted successfully with ID: {}", id);
+        } else {
+            log.warn("Failed to delete userMeal with ID: {}", id);
+        }
         return new ResponseEntity<>(result ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
     }
 

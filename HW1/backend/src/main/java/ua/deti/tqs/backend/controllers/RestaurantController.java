@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import ua.deti.tqs.backend.entities.Restaurant;
 import ua.deti.tqs.backend.services.interfaces.RestaurantService;
 import ua.deti.tqs.backend.utils.Constants;
 
+@Slf4j
 @RestController
 @RequestMapping(Constants.API_PATH_V1 + "restaurant")
 @Tag(name = "Restaurant", description = "The Restaurant API")
@@ -26,8 +28,16 @@ public class RestaurantController {
             @ApiResponse(responseCode = "400", description = "Invalid request body")
     })
     public ResponseEntity<Restaurant> createRestaurant(@RequestBody Restaurant restaurant) {
+        log.info("Creating a new restaurant");
+
         Restaurant newRestaurant = restaurantService.createRestaurant(restaurant);
         HttpStatus status = newRestaurant != null ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST;
+
+        if (newRestaurant != null) {
+            log.info("Restaurant created successfully with ID: {}", newRestaurant.getId());
+        } else {
+            log.warn("Failed to create restaurant");
+        }
         return new ResponseEntity<>(newRestaurant, status);
     }
 
@@ -38,8 +48,15 @@ public class RestaurantController {
             @ApiResponse(responseCode = "404", description = "Restaurant not found")
     })
     public ResponseEntity<Restaurant> getRestaurant(@PathVariable("id") Long id) {
+        log.info("Fetching a restaurant by ID: {}", id);
+
         Restaurant restaurant = restaurantService.getRestaurantById(id);
         HttpStatus status = restaurant != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+        if (restaurant != null) {
+            log.info("Restaurant found with ID: {}", restaurant.getId());
+        } else {
+            log.warn("Restaurant not found with ID: {}", id);
+        }
         return new ResponseEntity<>(restaurant, status);
     }
 
@@ -50,8 +67,16 @@ public class RestaurantController {
             @ApiResponse(responseCode = "404", description = "Restaurant not found")
     })
     public ResponseEntity<Restaurant> getRestaurantByName(@PathVariable("name") String name) {
+        log.info("Fetching a restaurant by name: {}", name);
+
         Restaurant restaurant = restaurantService.getRestaurantByName(name);
         HttpStatus status = restaurant != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+
+        if (restaurant != null) {
+            log.info("Restaurant found with name: {}", restaurant.getName());
+        } else {
+            log.warn("Restaurant not found with name: {}", name);
+        }
         return new ResponseEntity<>(restaurant, status);
     }
 
@@ -59,8 +84,16 @@ public class RestaurantController {
     @Operation(summary = "Get all restaurants", description = "Fetches a list of all restaurants.")
     @ApiResponse(responseCode = "200", description = "List of restaurants retrieved successfully")
     public ResponseEntity<Iterable<Restaurant>> getAllRestaurants() {
+        log.info("Fetching all restaurants");
+
         Iterable<Restaurant> restaurants = restaurantService.getAllRestaurants();
         HttpStatus status = restaurants != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+
+        if (restaurants != null) {
+            log.info("Restaurants retrieved successfully");
+        } else {
+            log.warn("No restaurants found");
+        }
         return new ResponseEntity<>(restaurants, status);
     }
 
@@ -71,8 +104,16 @@ public class RestaurantController {
             @ApiResponse(responseCode = "400", description = "Invalid request body")
     })
     public ResponseEntity<Restaurant> updateRestaurant(@RequestBody Restaurant restaurant) {
+        log.info("Updating restaurant with ID: {}", restaurant.getId());
+
         Restaurant updatedRestaurant = restaurantService.updateRestaurant(restaurant);
         HttpStatus status = updatedRestaurant != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+
+        if (updatedRestaurant != null) {
+            log.info("Restaurant updated successfully with ID: {}", updatedRestaurant.getId());
+        } else {
+            log.warn("Failed to update restaurant with ID: {}", restaurant.getId());
+        }
         return new ResponseEntity<>(updatedRestaurant, status);
     }
 
@@ -83,7 +124,15 @@ public class RestaurantController {
             @ApiResponse(responseCode = "404", description = "Restaurant not found")
     })
     public ResponseEntity<Void> deleteRestaurant(@PathVariable("id") Long id) {
+        log.info("Deleting restaurant with ID: {}", id);
+
         boolean result = restaurantService.deleteRestaurantById(id);
+
+        if (result) {
+            log.info("Restaurant deleted successfully with ID: {}", id);
+        } else {
+            log.warn("Failed to delete restaurant with ID: {}", id);
+        }
         return new ResponseEntity<>(result ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
     }
 }

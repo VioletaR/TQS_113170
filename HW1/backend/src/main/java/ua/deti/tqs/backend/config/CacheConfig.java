@@ -24,3 +24,8 @@ public class CacheConfig {
         return cacheManager;
     }
 }
+
+//// HEALTH
+//
+//Include a resource in your API to monitor the behavior of the (weather requests) cache, e.g.: total
+//requests, hits count, misses count.

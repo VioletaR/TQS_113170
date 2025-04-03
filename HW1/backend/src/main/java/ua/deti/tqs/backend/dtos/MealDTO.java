@@ -2,6 +2,7 @@ package ua.deti.tqs.backend.dtos;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ua.deti.tqs.backend.entities.Meal;
 import ua.deti.tqs.backend.entities.utils.WeatherIPMA;
 import ua.deti.tqs.backend.services.interfaces.WeatherService;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Getter
 @NoArgsConstructor
 public class MealDTO {
@@ -17,22 +19,28 @@ public class MealDTO {
     private WeatherIPMA weatherIPMA;
 
     public static MealDTO fromMeal(Meal meal, WeatherService weatherService) {
+        log.info("Creating MealDTO from mealId: {}", meal.getId());
         MealDTO dto = new MealDTO();
         dto.meal = meal;
 
         if (meal == null) return dto;
 
+        log.info("Obtaining district for mealId: {}", meal.getId());
         String districtName = meal.getRestaurant().getDistrict();
         Optional<Integer> districtIdOpt = weatherService.getDistrictId(districtName);
 
         districtIdOpt.ifPresent(districtId -> {
             try {
+                log.info("Fetching forecast for districtId: {}", districtId);
                 List<Forecast> forecasts = weatherService.getForecastByDistrict(districtId);
                 LocalDate mealDate = meal.getDate();
+
+                log.info("Fetching weather for meal date: {}", mealDate);
                 Optional<WeatherIPMA> weatherOpt = weatherService.getWeatherForDate(forecasts, mealDate);
                 weatherOpt.ifPresent(weather -> dto.weatherIPMA = weather);
+
             } catch (NumberFormatException e) {
-                System.err.println("Invalid district ID format: " + districtId);
+                log.error("Error while Fetching forecast for districtId: {}: {}", districtId,e.getMessage());
             }
         });
 

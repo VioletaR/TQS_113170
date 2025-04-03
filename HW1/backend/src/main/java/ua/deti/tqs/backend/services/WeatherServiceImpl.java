@@ -113,15 +113,20 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     private WeatherIPMA convertToWeatherIPMA(Forecast forecast) {
-        return new WeatherIPMA(
-                forecast.uvIndex(),
-                forecast.minTemp(),
-                forecast.maxTemp(),
-                forecast.windDirection(),
-                forecast.precipitationProbability(),
-                forecast.weatherTypeId(),
-                forecast.precipitationIntensityId()
-        );
+        try {
+            return new WeatherIPMA(
+                    forecast.uvIndex(),
+                    forecast.minTemp(),
+                    forecast.maxTemp(),
+                    forecast.windDirection(),
+                    forecast.precipitationProbability(),
+                    forecast.weatherTypeId(),
+                    forecast.precipitationIntensityId()
+            );
+        } catch (Exception e) {
+            log.warn("Failed to convert weather data: {}", e.getMessage());
+            return null;
+        }
     }
 
     private District convertToDistrict(Map<String, Object> data) {

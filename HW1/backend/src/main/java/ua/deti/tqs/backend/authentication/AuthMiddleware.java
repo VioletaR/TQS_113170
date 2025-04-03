@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-
+@Slf4j
 @Component
 @AllArgsConstructor
 public class AuthMiddleware extends OncePerRequestFilter {
@@ -29,6 +30,8 @@ public class AuthMiddleware extends OncePerRequestFilter {
 
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Basic ")) {
+            log.info("Authorization header: {}", authorizationHeader);
+
             String base64Credentials = authorizationHeader.substring(6);
             byte[] decodedBytes = Base64.getDecoder().decode(base64Credentials);
             String credentials = new String(decodedBytes, StandardCharsets.UTF_8);
@@ -38,9 +41,11 @@ public class AuthMiddleware extends OncePerRequestFilter {
 
             User found = userService.loginUser(name, password);
             if (found == null) {
+                log.warn("Invalid credentials for user: {}", name);
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid credentials");
                 return;
             }
+            log.info("User authenticated: {}", found.getUsername());
             CustomUserDetails userDetails = new CustomUserDetails(found.getId(), found.getRole(), found.getUsername(), "");
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());

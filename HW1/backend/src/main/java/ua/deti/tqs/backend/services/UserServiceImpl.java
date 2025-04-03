@@ -1,6 +1,7 @@
 package ua.deti.tqs.backend.services;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ua.deti.tqs.backend.authentication.utils.CurrentUser;
 import ua.deti.tqs.backend.entities.User;
@@ -8,6 +9,7 @@ import ua.deti.tqs.backend.entities.utils.UserRole;
 import ua.deti.tqs.backend.repositories.UserRepository;
 import ua.deti.tqs.backend.services.interfaces.UserService;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -16,6 +18,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User loginUser(String userName, String password) {
+        log.debug("Login user with username: {}", userName);
         User found = userRepository.findUserByUsername(userName).orElse(null);
 
         if (found == null || !found.getPassword().equals(password))
@@ -26,7 +29,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-
         User found = userRepository.findUserByUsername(user.getUsername()).orElse(null);
 
         if (found != null) return null;
