@@ -1,10 +1,10 @@
-package ua.deti.tqs.backend.authentication;
+package ua.deti.tqs.backend.authentication.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ua.deti.tqs.backend.entities.UserRole;
+import ua.deti.tqs.backend.entities.utils.UserRole;
 
 import java.util.Collection;
 

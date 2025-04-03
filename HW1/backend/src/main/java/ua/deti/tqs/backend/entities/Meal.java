@@ -1,9 +1,14 @@
 package ua.deti.tqs.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -15,10 +20,11 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "meal")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Meal {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "meal_id_gen")
-    @SequenceGenerator(name = "meal_id_gen", sequenceName = "meal_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -26,7 +32,8 @@ public class Meal {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "restaurant_id", nullable = false)
-    private ua.deti.tqs.backend.entities.Restaurant restaurant;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Restaurant restaurant;
 
     @NotNull
     @Column(name = "price", nullable = false, precision = 10, scale = 2)

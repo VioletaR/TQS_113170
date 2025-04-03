@@ -1,9 +1,9 @@
-package ua.deti.tqs.backend.authentication;
+package ua.deti.tqs.backend.authentication.utils;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import ua.deti.tqs.backend.entities.UserRole;
+import ua.deti.tqs.backend.entities.utils.UserRole;
 
 @Component
 public class CurrentUser {
