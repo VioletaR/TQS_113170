@@ -14,4 +14,6 @@ public interface UserMealService {
     UserMeal updateUserMeal(UserMeal userMeal);
 
     boolean deleteUserMealById(Long id);
+
+    List<UserMeal> getAllUserMealsByRestaurantId(Long restaurantId);
 }

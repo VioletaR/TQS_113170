@@ -57,6 +57,13 @@ public class UserMealServiceImpl implements UserMealService {
     }
 
     @Override
+    public List<UserMeal> getAllUserMealsByRestaurantId(Long restaurantId) {
+        if (!currentUser.getAuthenticatedUserRole().equals(UserRole.STAFF)) return null;
+
+        return userMealRepository.findAllByMeal_RestaurantId(restaurantId).orElse(null);
+    }
+
+    @Override
     public UserMeal updateUserMeal(UserMeal userMeal) {
         if (!currentUser.getAuthenticatedUserRole().equals(UserRole.STAFF)) return null;
 

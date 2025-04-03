@@ -77,7 +77,7 @@ public class UserMealController {
     @GetMapping("all/{userId}")
     @Operation(summary = "Get all UserMeals", description = "Fetches a list of all UserMeals per user id.")
     @ApiResponse(responseCode = "200", description = "List of UserMeals retrieved successfully")
-    public ResponseEntity<List<UserMealDTO>> getAllMealsByRestaurantId(@PathVariable("userId") Long userId) {
+    public ResponseEntity<List<UserMealDTO>> getAllMealsByUserId(@PathVariable("userId") Long userId) {
         log.info("Fetching all userMeals for user ID: {}", userId);
 
         List<UserMeal> userMeals = userMealService.getAllUserMealsByUserId(userId);
@@ -88,6 +88,23 @@ public class UserMealController {
                 .toList();
 
         log.info("Sent UserMealDTOs successfully for user ID: {}", userId);
+        return ResponseEntity.ok(userMealDTOs);
+    }
+
+    @GetMapping("all/restaurant/{restaurantId}")
+    @Operation(summary = "Get all UserMeals", description = "Fetches a list of all UserMeals per restaurant id.")
+    @ApiResponse(responseCode = "200", description = "List of UserMeals retrieved successfully")
+    public ResponseEntity<List<UserMealDTO>> getAllMealsByRestaurantId(@PathVariable("restaurantId") Long restaurantId) {
+        log.info("Fetching all userMeals for restaurant ID: {}", restaurantId);
+
+        List<UserMeal> userMeals = userMealService.getAllUserMealsByRestaurantId(restaurantId);
+
+
+        List<UserMealDTO> userMealDTOs = userMeals.stream()
+                .map(userMeal -> UserMealDTO.fromUserMeal(userMeal,weatherService))
+                .toList();
+
+        log.info("Sent UserMealDTOs successfully for restaurant ID: {}", restaurantId);
         return ResponseEntity.ok(userMealDTOs);
     }
 
