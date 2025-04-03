@@ -1,7 +1,6 @@
 package ua.deti.tqs.backend.config;
 
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

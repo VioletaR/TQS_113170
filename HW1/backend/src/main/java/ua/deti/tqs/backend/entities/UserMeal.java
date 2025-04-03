@@ -4,20 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.util.DigestUtils;
+
+import java.nio.charset.StandardCharsets;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "user_meal")
-@AllArgsConstructor
-@NoArgsConstructor
 public class UserMeal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,4 +47,10 @@ public class UserMeal {
     @Column(name = "code", nullable = false, length = 50)
     private String code;
 
+    @PrePersist
+    private void generateCode() {
+        String input = user.getId().toString() + meal.getId().toString();
+        String md5Hex = DigestUtils.md5DigestAsHex(input.getBytes(StandardCharsets.UTF_8));
+        this.code = "CUM-" + md5Hex.substring(0, 8);
+    }
 }

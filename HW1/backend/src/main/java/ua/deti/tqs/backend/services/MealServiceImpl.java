@@ -64,11 +64,6 @@ public class MealServiceImpl implements MealService {
             changedFields++;
         }
 
-        if (meal.getDate() != null) {
-            existingMeal.setDate(meal.getDate());
-            changedFields++;
-        }
-
         if (changedFields == 0) return null;
 
         return mealRepository.save(existingMeal);

@@ -26,7 +26,6 @@ public class CacheMonitoringController {
     public Map<String, Map<String, Object>> getCacheStatistics() {
         Map<String, Map<String, Object>> stats = new HashMap<>();
 
-        // Update your CacheConfig to enable statistics
         for (String cacheName : cacheManager.getCacheNames()) {
             CaffeineCache caffeineCache = (CaffeineCache) cacheManager.getCache(cacheName);
             if (caffeineCache != null) {
