@@ -1,0 +1,54 @@
+name: Tests & Sonar analysis
+
+on:
+  push:
+    paths:
+      - "HW1/**"
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: ./HW1
+
+jobs:
+  build:
+    name: Build, test and analyze
+    runs-on: ubuntu-latest
+    permissions: read-all
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 21
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Up containers
+        run: docker compose -f compose.yaml up -d --build
+        working-directory: ./HW1
+      - name: Build and analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=VioletaR_TQS_113170_2384ab07-c388-491f-b1c1-809e25876f0e -Dsonar.projectName='TQS_113170'
+        working-directory: ./HW1/backend
+
+      - name: Down containers
+        run: |
+          docker compose -f compose.yaml down --volumes
+          docker builder prune -a -f
+        working-directory: ./HW1
