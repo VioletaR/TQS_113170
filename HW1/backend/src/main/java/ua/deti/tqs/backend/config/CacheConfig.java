@@ -20,12 +20,9 @@ public class CacheConfig {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager("districtsCache", "forecastCache", "districtIdCache");
         cacheManager.setCaffeine(Caffeine.newBuilder()
                 .expireAfterWrite(10, TimeUnit.MINUTES)
-                .maximumSize(100));
+                .maximumSize(100)
+                .recordStats());
+
         return cacheManager;
     }
 }
-
-//// HEALTH
-//
-//Include a resource in your API to monitor the behavior of the (weather requests) cache, e.g.: total
-//requests, hits count, misses count.
