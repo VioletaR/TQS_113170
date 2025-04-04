@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        if (! currentUser.getAuthenticatedUserId().equals(id)) {
+        if (currentUser.getAuthenticatedUserId() == null || ! currentUser.getAuthenticatedUserId().equals(id)) {
             return null;
         }
         return userRepository.findById(id).orElse(null);
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByName(String name) {
         User found = userRepository.findUserByUsername(name).orElse(null);
-        if (found == null || !currentUser.getAuthenticatedUserId().equals(found.getId())) {
+        if (found == null || currentUser.getAuthenticatedUserId() == null ||  !currentUser.getAuthenticatedUserId().equals(found.getId())) {
             return null;
         }
         return found;
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user) {
-        if (!currentUser.getAuthenticatedUserId().equals(user.getId())) {
+        if (currentUser.getAuthenticatedUserId() == null || !currentUser.getAuthenticatedUserId().equals(user.getId())) {
             return null;
         }
 
@@ -103,11 +103,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean deleteUserById(Long id) {
-        if (! currentUser.getAuthenticatedUserId().equals(id)) {
+        if (currentUser.getAuthenticatedUserId() == null ||  ! currentUser.getAuthenticatedUserId().equals(id)) {
             return false;
         }
 
-        userRepository.deleteById(id);
-        return userRepository.existsById(id);
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }
