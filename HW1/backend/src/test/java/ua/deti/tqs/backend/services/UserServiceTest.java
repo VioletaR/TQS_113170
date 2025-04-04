@@ -115,7 +115,6 @@ class UserServiceTest {
     @Test
     void whenUserGetsOtherProfile_thenDeny() {
         when(currentUser.getAuthenticatedUserId()).thenReturn(2L);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
 
         User found = userService.getUserById(1L);
         assertThat(found).isNull();
@@ -133,7 +132,6 @@ class UserServiceTest {
     @Test
     void whenUserGetsProfileWithInvalidUserName_thenDeny() {
         when(currentUser.getAuthenticatedUserId()).thenReturn(1L);
-        when(userRepository.findUserByUsername("user1")).thenReturn(Optional.of(user1));
 
         User found = userService.getUserByName("invalidUser");
         assertThat(found).isNull();
@@ -165,8 +163,6 @@ class UserServiceTest {
         updatedUser.setUsername(null);
         updatedUser.setPassword(null);
         updatedUser.setRole(null);
-
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
 
         User result = userService.updateUser(updatedUser);
         assertThat(result).isNull();
