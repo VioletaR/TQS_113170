@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
-public class RestaurantRepositoryTest {
+class RestaurantRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
 

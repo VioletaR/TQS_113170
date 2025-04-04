@@ -14,18 +14,6 @@ public interface UserMealRepository extends JpaRepository<UserMeal, Long> {
 
     Optional<List<UserMeal>> findAllByMeal_RestaurantId(Long restaurantId);
 
-
-    @Query("SELECT COUNT(um) FROM UserMeal um " +
-            "JOIN um.meal m " +
-            "WHERE um.user.id = :userId " +
-            "AND m.date < :newEnd " +
-            "AND FUNCTION('DATE_ADD', m.date, 30) > :newStart")
-    int  countOverlappingMeals(
-            @Param("userId") Long userId,
-            @Param("newStart") LocalDate newStart,
-            @Param("newEnd") LocalDate newEnd
-    );
-
     @Query("SELECT COUNT(um) FROM UserMeal um WHERE um.meal.id = :mealId")
     int countByMealId(@Param("mealId") Long mealId);
 }

@@ -28,27 +28,10 @@ public class UserMealDTO {
 
         Meal meal = userMeal.getMeal();
 
-        if (meal == null) return dto;
+        WeatherIPMA weather = MealDTO.fromMeal(meal, weatherService).getWeatherIPMA();
+        if (weather == null) return dto;
 
-        log.info("Fetching weather for meal date: {}", meal.getDate());
-        String districtName = meal.getRestaurant().getDistrict();
-        Optional<Integer> districtIdOpt = weatherService.getDistrictId(districtName);
-
-        districtIdOpt.ifPresent(districtId -> {
-            try {
-                log.info("Fetching forecast for districtId: {}", districtId);
-                List<Forecast> forecasts = weatherService.getForecastByDistrict(districtId);
-                LocalDate mealDate = meal.getDate();
-
-                log.info("Fetching weather for meal date: {}", mealDate);
-                Optional<WeatherIPMA> weatherOpt = weatherService.getWeatherForDate(forecasts, mealDate);
-                weatherOpt.ifPresent(weather -> dto.weatherIPMA = weather);
-
-            } catch (NumberFormatException e) {
-                log.error("Error while Fetching forecast for districtId: {}: {}", districtId,e.getMessage());
-            }
-        });
-
+        dto.weatherIPMA = weather;
         return dto;
     }
 }

@@ -26,10 +26,10 @@ public class UserMealServiceImpl implements UserMealService {
     private MealRepository mealRepository;
     private CurrentUser currentUser;
 
-    @Override
     @Transactional
     public UserMeal createUserMeal(UserMeal userMeal) {
-        if (!currentUser.getAuthenticatedUserId().equals(userMeal.getUser().getId())) {
+        Long userId = currentUser.getAuthenticatedUserId();
+        if (!userId.equals(userMeal.getUser().getId())) {
             return null;
         }
 
@@ -43,21 +43,24 @@ public class UserMealServiceImpl implements UserMealService {
             return null;
         }
 
-        LocalDate mealStart = meal.getDate();
-        LocalDate mealEnd = mealStart.plus(1, ChronoUnit.HOURS);
+        LocalDate mealDate = meal.getDate();
+        LocalDate newStart = mealDate;
+        LocalDate newEnd = mealDate.plusDays(1);
 
-        int overlappingCount = userMealRepository.countOverlappingMeals(
-                currentUser.getAuthenticatedUserId(),
-                mealStart,
-                mealEnd
-        );
+        List<UserMeal> userMeals = userMealRepository.findAllByUserId(userId).orElse(null);
+        int overlappingCount = 0;
+        for (UserMeal um : userMeals) {
+            LocalDate existingMealDate = um.getMeal().getDate();
+            if (existingMealDate.isBefore(newEnd) && existingMealDate.plusDays(30).isAfter(newStart)) {
+                overlappingCount++;
+            }
+        }
 
         if (overlappingCount > 0) {
             return null;
         }
 
-        User user = userRepository.getReferenceById(currentUser.getAuthenticatedUserId());
-
+        User user = userRepository.getReferenceById(userId);
         UserMeal newBooking = new UserMeal();
         newBooking.setUser(user);
         newBooking.setMeal(meal);

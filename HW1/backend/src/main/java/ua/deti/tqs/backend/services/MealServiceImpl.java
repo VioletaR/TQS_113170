@@ -72,7 +72,10 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public boolean deleteMealById(Long id) {
-        mealRepository.deleteById(id);
-        return mealRepository.findById(id).isEmpty();
+        if (mealRepository.existsById(id)) {
+            mealRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

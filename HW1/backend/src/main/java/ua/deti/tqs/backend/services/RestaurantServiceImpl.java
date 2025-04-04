@@ -77,7 +77,10 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public boolean deleteRestaurantById(Long id) {
-        restaurantRepository.deleteById(id);
-        return restaurantRepository.findById(id).isEmpty();
+        if (restaurantRepository.existsById(id)) {
+            restaurantRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

@@ -21,7 +21,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
-public class UserMealRepositoryTest {
+class UserMealRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
 
@@ -89,23 +89,6 @@ public class UserMealRepositoryTest {
         Optional<List<UserMeal>> found = userMealRepository.findAllByMeal_RestaurantId(999L);
         assertThat(found).isPresent();
         assertThat(found.get()).isEmpty();
-    }
-
-    @Test
-    void whenCountOverlappingMeals_withOverlap_thenReturnOne() {
-        LocalDate newStart = LocalDate.now().minusDays(1);
-        LocalDate newEnd = LocalDate.now().plusDays(1);
-
-        int count = userMealRepository.countOverlappingMeals(user1.getId(), newStart, newEnd);
-        assertThat(count).isEqualTo(1);
-    }
-
-    @Test
-    void whenCountOverlappingMeals_withNoOverlap_thenReturnZero() {
-        LocalDate newStart = LocalDate.now().plusDays(31);
-        LocalDate newEnd = LocalDate.now().plusDays(35);
-        int count = userMealRepository.countOverlappingMeals(user1.getId(), newStart, newEnd);
-        assertThat(count).isEqualTo(0);
     }
 
     @Test
