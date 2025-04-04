@@ -40,7 +40,7 @@ class MealServiceTest {
         restaurant1 = new Restaurant();
         restaurant1.setId(1L);
         restaurant1.setName("restaurant1");
-        restaurant1.setDistrict("district1");
+        restaurant1.setLocation("location1");
         restaurant1.setSeats(10);
 
         meal1 = new Meal();

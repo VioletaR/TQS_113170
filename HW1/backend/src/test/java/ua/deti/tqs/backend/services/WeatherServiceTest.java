@@ -1,4 +1,4 @@
 package ua.deti.tqs.backend.services;
 
-public class UserMealServiceImpl {
+public class WeatherServiceTest {
 }

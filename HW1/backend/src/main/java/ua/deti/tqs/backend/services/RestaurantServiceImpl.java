@@ -16,7 +16,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public Restaurant createRestaurant(Restaurant restaurant) {
         if (restaurant.getName() == null || restaurant.getName().trim().isEmpty()
-            || restaurant.getDistrict() == null || restaurant.getDistrict().trim().isEmpty()
+            || restaurant.getLocation() == null || restaurant.getLocation().trim().isEmpty()
             || restaurant.getSeats() == null || restaurant.getSeats() <= 0
         )
             return null;
@@ -26,7 +26,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         if (existingRestaurant != null)  return null;
 
         restaurant.setName(restaurant.getName().trim());
-        restaurant.setDistrict(restaurant.getDistrict().trim());
+        restaurant.setLocation(restaurant.getLocation().trim());
         restaurant.setId(null);
 
         return restaurantRepository.save(restaurant);
@@ -65,8 +65,8 @@ public class RestaurantServiceImpl implements RestaurantService {
             changedFields++;
         }
 
-        if (restaurant.getDistrict() != null && !restaurant.getDistrict().trim().isEmpty()) {
-            existingRestaurant.setDistrict(restaurant.getDistrict());
+        if (restaurant.getLocation() != null && !restaurant.getLocation().trim().isEmpty()) {
+            existingRestaurant.setLocation(restaurant.getLocation());
             changedFields++;
         }
 

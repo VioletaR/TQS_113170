@@ -24,14 +24,15 @@ public class MealDTO {
         MealDTO dto = new MealDTO();
         dto.meal = meal;
 
-        log.info("Obtaining district for mealId: {}", meal.getId());
-        String districtName = meal.getRestaurant().getDistrict();
-        Optional<Integer> districtIdOpt = weatherService.getDistrictId(districtName);
-
-        districtIdOpt.ifPresent(districtId -> {
+        log.info("Obtaining location for mealId: {}", meal.getId());
+        String locationName = meal.getRestaurant().getLocation();
+        log.info("Location name: {}", locationName);
+        Optional<Integer> locationIdOpt = weatherService.getLocationId(locationName);
+        log.info("LocationIdOpt: {}", locationIdOpt);
+        locationIdOpt.ifPresent(locationId -> {
             try {
-                log.info("Fetching forecast for districtId: {}", districtId);
-                List<Forecast> forecasts = weatherService.getForecastByDistrict(districtId);
+                log.info("Fetching forecast for locationId: {}", locationId);
+                List<Forecast> forecasts = weatherService.getForecastByLocation(locationId);
                 LocalDate mealDate = meal.getDate();
 
                 log.info("Fetching weather for meal date: {}", mealDate);
@@ -39,7 +40,7 @@ public class MealDTO {
                 weatherOpt.ifPresent(weather -> dto.weatherIPMA = weather);
 
             } catch (NumberFormatException e) {
-                log.error("Error while Fetching forecast for districtId: {}: {}", districtId,e.getMessage());
+                log.error("Error while Fetching forecast for locationId: {}: {}", locationId,e.getMessage());
             }
         });
 

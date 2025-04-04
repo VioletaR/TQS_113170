@@ -74,28 +74,28 @@ public class UserMealServiceImpl implements UserMealService {
         UserMeal userMeal = userMealRepository.findById(id).orElse(null);
         if (userMeal == null) return null;
 
-        if (!currentUser.getAuthenticatedUserId().equals(userMeal.getUser().getId())) return null;
+        if (currentUser.getAuthenticatedUserId() == null || !currentUser.getAuthenticatedUserId().equals(userMeal.getUser().getId())) return null;
 
         return userMeal;
     }
 
     @Override
     public List<UserMeal> getAllUserMealsByUserId(Long id){
-        if (!currentUser.getAuthenticatedUserId().equals(id)) return null;
+        if (currentUser.getAuthenticatedUserId() == null || !currentUser.getAuthenticatedUserId().equals(id)) return null;
 
         return userMealRepository.findAllByUserId(id).orElse(null);
     }
 
     @Override
     public List<UserMeal> getAllUserMealsByRestaurantId(Long restaurantId) {
-        if (!currentUser.getAuthenticatedUserRole().equals(UserRole.STAFF)) return null;
+        if (currentUser.getAuthenticatedUserId() == null ||  !currentUser.getAuthenticatedUserRole().equals(UserRole.STAFF)) return null;
 
         return userMealRepository.findAllByMeal_RestaurantId(restaurantId).orElse(null);
     }
 
     @Override
     public UserMeal updateUserMeal(UserMeal userMeal) {
-        if (!currentUser.getAuthenticatedUserRole().equals(UserRole.STAFF)) return null;
+        if (currentUser.getAuthenticatedUserId() == null ||  !currentUser.getAuthenticatedUserRole().equals(UserRole.STAFF)) return null;
 
         UserMeal existingUserMeal = userMealRepository.findById(userMeal.getId()).orElse(null);
         if (existingUserMeal == null) return null;
@@ -114,12 +114,16 @@ public class UserMealServiceImpl implements UserMealService {
 
     @Override
     public boolean deleteUserMealById(Long id) {
-        UserMeal userMeal = userMealRepository.findById(id).orElse(null);
-        if (userMeal == null) return false;
+        if (userMealRepository.existsById(id)) {
+            UserMeal userMeal = userMealRepository.findById(id).orElse(null);
+            if (userMeal == null) return false;
 
-        if (!currentUser.getAuthenticatedUserId().equals(userMeal.getUser().getId())) return false;
+            if (currentUser.getAuthenticatedUserId() == null || !currentUser.getAuthenticatedUserId().equals(userMeal.getUser().getId()))
+                return false;
 
-        userMealRepository.deleteById(id);
-        return userMealRepository.findById(id).isPresent();
+            userMealRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

@@ -23,8 +23,8 @@ public class Restaurant {
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "district", nullable = false)
-    private String district;
+    @Column(name = "location", nullable = false)
+    private String location;
 
     @NotNull
     @Column(name = "seats", nullable = false)

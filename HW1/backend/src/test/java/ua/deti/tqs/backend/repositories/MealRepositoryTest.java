@@ -37,12 +37,12 @@ class MealRepositoryTest {
     void setUp() {
         restaurant1 = new Restaurant();
         restaurant1.setName("restaurant1");
-        restaurant1.setDistrict("district1");
+        restaurant1.setLocation("location1");
         restaurant1.setSeats(10);
 
         restaurant2 = new Restaurant();
         restaurant2.setName("restaurant2");
-        restaurant2.setDistrict("district2");
+        restaurant2.setLocation("location2");
         restaurant2.setSeats(20);
 
         entityManager.persist(restaurant1);

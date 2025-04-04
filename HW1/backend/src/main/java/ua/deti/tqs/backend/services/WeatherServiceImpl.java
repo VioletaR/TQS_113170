@@ -9,8 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ua.deti.tqs.backend.dtos.District;
+import ua.deti.tqs.backend.dtos.Location;
 import ua.deti.tqs.backend.dtos.Forecast;
+import ua.deti.tqs.backend.entities.UserMeal;
 import ua.deti.tqs.backend.entities.utils.WeatherIPMA;
 import ua.deti.tqs.backend.services.interfaces.WeatherService;
 
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-import static ua.deti.tqs.backend.utils.Constants.BASE_URL_DISTRICTS;
+import static ua.deti.tqs.backend.utils.Constants.BASE_URL_LOCATIONS;
 import static ua.deti.tqs.backend.utils.Constants.BASE_URL_FORECAST;
 
 @Slf4j
@@ -27,40 +28,40 @@ import static ua.deti.tqs.backend.utils.Constants.BASE_URL_FORECAST;
 @AllArgsConstructor
 public class WeatherServiceImpl implements WeatherService {
     private final RestTemplate restTemplate = new RestTemplate();
-    private record DistrictsResponse(List<Map<String, Object>> data) {}
 
     @Override
-    @Cacheable(value = "districtsCache")
-    public List<District> getAllDistricts() {
-        log.info("Fetching districts from IPMA API");
+    @Cacheable(value = "locationsCache")
+    public List<Location> getAllLocations() {
+        log.info("Fetching locations from IPMA API");
         try {
-            ResponseEntity<DistrictsResponse> response = restTemplate.exchange(
-                    BASE_URL_DISTRICTS,
+            ResponseEntity<List<Map<String, Object>>> response = restTemplate.exchange(
+                    BASE_URL_LOCATIONS,
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<>() {}
             );
 
             if (response.getStatusCode().is2xxSuccessful() && response.hasBody()) {
-                return Optional.ofNullable(response.getBody())
-                        .map(DistrictsResponse::data)
+                List<Map<String, Object>> data = response.getBody();
+
+                return Optional.ofNullable(data)
                         .orElse(Collections.emptyList())
                         .stream()
-                        .map(this::convertToDistrict)
+                        .map(this::convertToLocation)
                         .filter(Objects::nonNull)
                         .toList();
             }
         } catch (RestClientException e) {
-            log.error("Error fetching districts: {}", e.getMessage());
+            log.error("Error fetching locations: {}", e.getMessage());
         }
         return Collections.emptyList();
     }
 
     @Override
-    @Cacheable(value = "forecastCache", key = "#districtId")
-    public List<Forecast> getForecastByDistrict(int districtId) {
-        String url = String.format("%s%d.json", BASE_URL_FORECAST, districtId);
-        log.info("Fetching forecast for district ID: {}", districtId);
+    @Cacheable(value = "forecastCache", key = "#locationId")
+    public List<Forecast> getForecastByLocation(int locationId) {
+        String url = String.format("%s%d.json", BASE_URL_FORECAST, locationId);
+        log.info("Fetching forecast for location ID: {}", locationId);
 
         try {
             ResponseEntity<List<Forecast>> response = restTemplate.exchange(
@@ -73,27 +74,29 @@ public class WeatherServiceImpl implements WeatherService {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 return Optional.ofNullable(response.getBody())
-                        .orElse(Collections.emptyList());
+                        .orElse(Collections.emptyList()).stream().filter(
+                                forecast -> forecast.periodId() == 24
+                        ).toList();
             }
         } catch (RestClientException e) {
-            log.error("Error fetching forecast for district {}: {}", districtId, e.getMessage());
+            log.error("Error fetching forecast for location {}: {}", locationId, e.getMessage());
         }
         return Collections.emptyList();
     }
 
     @Override
-    @Cacheable(value = "districtIdCache", key = "#districtName")
-    public Optional<Integer> getDistrictId(String districtName) {
-        log.debug("Looking up district ID for: {}", districtName);
-        return getAllDistricts().stream()
-                .filter(district -> district.local().equalsIgnoreCase(districtName.trim()))
+    @Cacheable(value = "locationIdCache", key = "#locationName")
+    public Optional<Integer> getLocationId(String locationName) {
+        log.debug("Looking up location ID for: {}", locationName);
+        return getAllLocations().stream()
+                .filter(location -> location.local().equalsIgnoreCase(locationName.trim()))
                 .findFirst()
-                .map(District::globalIdLocal);
+                .map(Location::globalIdLocal);
     }
 
     @Override
     public Optional<WeatherIPMA> getWeatherForDate(List<Forecast> forecasts, LocalDate date) {
-        log.debug("Fetching closest weather for district on {}", date);
+        log.debug("Fetching closest weather for location on {}", date);
         try {
             if (forecasts == null || forecasts.isEmpty()) {
                 return Optional.empty();
@@ -107,7 +110,7 @@ public class WeatherServiceImpl implements WeatherService {
                     }))
                     .map(this::convertToWeatherIPMA);
         } catch (Exception e) {
-            log.error("Error getting closest weather for district: {}", e.getMessage());
+            log.error("Error getting closest weather for location: {}", e.getMessage());
             return Optional.empty();
         }
     }
@@ -129,9 +132,9 @@ public class WeatherServiceImpl implements WeatherService {
         }
     }
 
-    private District convertToDistrict(Map<String, Object> data) {
+    private Location convertToLocation(Map<String, Object> data) {
         try {
-            return new District(
+            return new Location(
                     (int) data.get("idRegiao"),
                     (String) data.get("idAreaAviso"),
                     (int) data.get("idConcelho"),
@@ -142,9 +145,23 @@ public class WeatherServiceImpl implements WeatherService {
                     (String) data.get("longitude")
             );
         } catch (Exception e) {
-            log.warn("Failed to convert district data: {}", e.getMessage());
+            log.warn("Failed to convert location data: {}", e.getMessage());
             return null;
         }
     }
 
 }
+
+//public interface UserMealService {
+//    UserMeal createUserMeal(UserMeal userMeal);
+//
+//
+//
+//    List<UserMeal> getAllUserMealsByUserId(Long userId);
+//
+//    UserMeal updateUserMeal(UserMeal userMeal);
+//
+//    boolean deleteUserMealById(Long id);
+//
+//    List<UserMeal> getAllUserMealsByRestaurantId(Long restaurantId);
+//}

@@ -39,7 +39,7 @@ class UserMealRepositoryTest {
     void setUp() {
         restaurant1 = new Restaurant();
         restaurant1.setName("restaurant1");
-        restaurant1.setDistrict("district1");
+        restaurant1.setLocation("location1");
         restaurant1.setSeats(10);
         entityManager.persist(restaurant1);
 

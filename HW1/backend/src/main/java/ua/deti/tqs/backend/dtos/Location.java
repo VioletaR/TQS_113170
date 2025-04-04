@@ -3,7 +3,7 @@ package ua.deti.tqs.backend.dtos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
-public record District(
+public record Location(
         @JsonProperty("idRegiao") int regionId,
         @JsonProperty("idAreaAviso") String warningAreaId,
         @JsonProperty("idConcelho") int municipalityId,

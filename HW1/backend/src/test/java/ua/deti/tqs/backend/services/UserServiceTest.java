@@ -131,7 +131,6 @@ class UserServiceTest {
 
     @Test
     void whenUserGetsProfileWithInvalidUserName_thenDeny() {
-        when(currentUser.getAuthenticatedUserId()).thenReturn(1L);
 
         User found = userService.getUserByName("invalidUser");
         assertThat(found).isNull();

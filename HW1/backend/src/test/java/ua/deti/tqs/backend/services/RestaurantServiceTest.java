@@ -36,7 +36,7 @@ class RestaurantServiceTest {
         restaurant1 = new Restaurant();
         restaurant1.setId(1L);
         restaurant1.setName("restaurant1");
-        restaurant1.setDistrict("district1");
+        restaurant1.setLocation("location1");
         restaurant1.setSeats(10);
     }
 
@@ -53,21 +53,21 @@ class RestaurantServiceTest {
         // Test null name
         Restaurant invalid = new Restaurant();
         invalid.setName(null);
-        invalid.setDistrict("district1");
+        invalid.setLocation("location1");
         invalid.setSeats(10);
         Restaurant created = restaurantService.createRestaurant(invalid);
         assertThat(created).isNull();
         verify(restaurantRepository, never()).save(any());
 
-        // Test null district
+        // Test null location
         invalid.setName("name");
-        invalid.setDistrict(null);
+        invalid.setLocation(null);
         created = restaurantService.createRestaurant(invalid);
         assertThat(created).isNull();
         verify(restaurantRepository, never()).save(any());
 
         // Test negative seats
-        invalid.setDistrict("district1");
+        invalid.setLocation("location1");
         invalid.setSeats(-5);
         created = restaurantService.createRestaurant(invalid);
         assertThat(created).isNull();
@@ -114,13 +114,13 @@ class RestaurantServiceTest {
         Restaurant existing = new Restaurant();
         existing.setId(1L);
         existing.setName("oldName");
-        existing.setDistrict("oldDistrict");
+        existing.setLocation("oldLocation");
         existing.setSeats(5);
 
         Restaurant updatedInfo = new Restaurant();
         updatedInfo.setId(1L);
         updatedInfo.setName("newName");
-        updatedInfo.setDistrict("newDistrict");
+        updatedInfo.setLocation("newLocation");
         updatedInfo.setSeats(20);
 
         when(restaurantRepository.findById(1L)).thenReturn(Optional.of(existing));
@@ -128,7 +128,7 @@ class RestaurantServiceTest {
 
         Restaurant result = restaurantService.updateRestaurant(updatedInfo);
         assertThat(result.getName()).isEqualTo("newName");
-        assertThat(result.getDistrict()).isEqualTo("newDistrict");
+        assertThat(result.getLocation()).isEqualTo("newLocation");
         assertThat(result.getSeats()).isEqualTo(20);
         verify(restaurantRepository).save(existing);
     }

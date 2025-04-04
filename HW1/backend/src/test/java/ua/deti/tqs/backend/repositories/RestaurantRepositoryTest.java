@@ -31,13 +31,13 @@ class RestaurantRepositoryTest {
         restaurant1 = new Restaurant();
 
         restaurant1.setName("restaurant1");
-        restaurant1.setDistrict("district1");
+        restaurant1.setLocation("Location1");
         restaurant1.setSeats(10);
 
         restaurant2 = new Restaurant();
 
         restaurant2.setName("restaurant2");
-        restaurant2.setDistrict("district2");
+        restaurant2.setLocation("Location2");
         restaurant2.setSeats(20);
 
         entityManager.persist(restaurant1);
@@ -74,14 +74,14 @@ class RestaurantRepositoryTest {
     void whenUpdateRestaurant_thenRestaurantShouldBeUpdated() {
 
         restaurant1.setName("updatedRestaurant");
-        restaurant1.setDistrict("updatedDistrict");
+        restaurant1.setLocation("updatedLocation");
         restaurant1.setSeats(2);
         restaurantRepository.save(restaurant1);
 
         Restaurant updatedRestaurant = restaurantRepository.findById(restaurant1.getId()).orElse(null);
         assertThat(updatedRestaurant).isNotNull();
         assertThat(updatedRestaurant.getName()).isEqualTo("updatedRestaurant");
-        assertThat(updatedRestaurant.getDistrict()).isEqualTo("updatedDistrict");
+        assertThat(updatedRestaurant.getLocation()).isEqualTo("updatedLocation");
         assertThat(updatedRestaurant.getSeats()).isEqualTo(2);
     }
 
