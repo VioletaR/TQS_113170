@@ -19,11 +19,10 @@ public class MealDTO {
     private WeatherIPMA weatherIPMA;
 
     public static MealDTO fromMeal(Meal meal, WeatherService weatherService) {
+        if (meal == null) return null;
         log.info("Creating MealDTO from mealId: {}", meal.getId());
         MealDTO dto = new MealDTO();
         dto.meal = meal;
-
-        if (meal == null) return dto;
 
         log.info("Obtaining district for mealId: {}", meal.getId());
         String districtName = meal.getRestaurant().getDistrict();

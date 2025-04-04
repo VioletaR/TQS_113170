@@ -20,11 +20,10 @@ public class UserMealDTO {
     private UserMeal userMeal;
 
     public static UserMealDTO fromUserMeal(UserMeal userMeal, WeatherService weatherService) {
+        if (userMeal == null || userMeal.getMeal() == null) return null;
         log.info("Creating UserMealDTO from userMealId: {}", userMeal.getId());
         UserMealDTO dto = new UserMealDTO();
         dto.userMeal = userMeal;
-
-        if (userMeal == null) return dto;
 
         Meal meal = userMeal.getMeal();
 
