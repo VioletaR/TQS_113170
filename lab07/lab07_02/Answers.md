@@ -28,4 +28,5 @@ scenario. Check the results. What happened?
 > [Prometheus](http://127.0.0.1:3000/) // not transient
 
 What check failed on the last run you made and up to what value?
-- 
+
+Status is 200 check failed
