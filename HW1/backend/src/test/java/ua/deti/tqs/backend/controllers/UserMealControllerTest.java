@@ -3,10 +3,8 @@ package ua.deti.tqs.backend.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -17,7 +15,6 @@ import ua.deti.tqs.backend.entities.utils.UserRole;
 import ua.deti.tqs.backend.services.interfaces.UserMealService;
 import ua.deti.tqs.backend.services.interfaces.UserService;
 import ua.deti.tqs.backend.services.interfaces.WeatherService;
-import ua.deti.tqs.backend.dtos.Forecast;
 import ua.deti.tqs.backend.entities.utils.WeatherIPMA;
 
 import java.math.BigDecimal;
@@ -25,8 +22,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static net.bytebuddy.matcher.ElementMatchers.is;
-import static org.assertj.core.api.AssertionsForClassTypes.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -36,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(UserMealController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
-public class UserMealControllerTest {
+class UserMealControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

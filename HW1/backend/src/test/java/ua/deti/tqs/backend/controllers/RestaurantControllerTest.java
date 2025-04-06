@@ -8,9 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ua.deti.tqs.backend.authentication.AuthMiddleware;
 import ua.deti.tqs.backend.entities.Restaurant;
-import ua.deti.tqs.backend.services.RestaurantServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ua.deti.tqs.backend.services.interfaces.RestaurantService;
 import ua.deti.tqs.backend.services.interfaces.UserService;
@@ -30,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(RestaurantController.class)
-public class RestaurantControllerTest {
+class RestaurantControllerTest {
     @Autowired
     private MockMvc mockMvc;
 

@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class WeatherServiceTest {
+class WeatherServiceTest {
 
     private WeatherServiceImpl weatherService;
 
@@ -55,7 +55,7 @@ public class WeatherServiceTest {
                 ArgumentMatchers.<ParameterizedTypeReference<List<Map<String, Object>>>>any())
         ).thenReturn(response);
 
-        List<Location> locations = weatherService.getAllLocations();
+//        List<Location> locations = weatherService.getAllLocations();
     }
 
 

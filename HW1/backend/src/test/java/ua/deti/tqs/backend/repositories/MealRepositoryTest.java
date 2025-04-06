@@ -11,7 +11,6 @@ import ua.deti.tqs.backend.entities.Meal;
 import ua.deti.tqs.backend.entities.Restaurant;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;

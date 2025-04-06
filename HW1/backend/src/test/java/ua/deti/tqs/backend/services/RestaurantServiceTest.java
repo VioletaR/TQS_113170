@@ -5,15 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
-import ua.deti.tqs.backend.entities.Meal;
 import ua.deti.tqs.backend.entities.Restaurant;
 import ua.deti.tqs.backend.repositories.RestaurantRepository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 

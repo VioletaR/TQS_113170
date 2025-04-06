@@ -18,25 +18,20 @@ import ua.deti.tqs.backend.dtos.Forecast;
 import ua.deti.tqs.backend.dtos.MealDTO;
 import ua.deti.tqs.backend.entities.Meal;
 import ua.deti.tqs.backend.entities.Restaurant;
-import ua.deti.tqs.backend.entities.User;
 import ua.deti.tqs.backend.entities.utils.WeatherIPMA;
 import ua.deti.tqs.backend.repositories.MealRepository;
 import ua.deti.tqs.backend.repositories.RestaurantRepository;
-import ua.deti.tqs.backend.repositories.UserRepository;
 import ua.deti.tqs.backend.services.interfaces.WeatherService;
 import ua.deti.tqs.backend.utils.Constants;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -45,7 +40,7 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-public class MealControllerIT {
+class MealControllerIT {
     @Container
     private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("testdb")

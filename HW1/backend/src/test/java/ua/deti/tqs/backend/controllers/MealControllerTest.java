@@ -2,8 +2,6 @@ package ua.deti.tqs.backend.controllers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.bytebuddy.agent.ByteBuddyAgent;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,9 +16,6 @@ import ua.deti.tqs.backend.dtos.Location;
 import ua.deti.tqs.backend.entities.Meal;
 import ua.deti.tqs.backend.entities.Restaurant;
 import ua.deti.tqs.backend.entities.utils.WeatherIPMA;
-import ua.deti.tqs.backend.services.MealServiceImpl;
-import ua.deti.tqs.backend.services.WeatherServiceImpl;
-import ua.deti.tqs.backend.dtos.MealDTO;
 import ua.deti.tqs.backend.services.interfaces.MealService;
 import ua.deti.tqs.backend.services.interfaces.UserService;
 import ua.deti.tqs.backend.services.interfaces.WeatherService;
@@ -40,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(MealController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class MealControllerTest {
+class MealControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

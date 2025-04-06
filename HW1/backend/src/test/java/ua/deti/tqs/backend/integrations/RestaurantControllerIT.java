@@ -14,24 +14,19 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ua.deti.tqs.backend.entities.Restaurant;
-import ua.deti.tqs.backend.entities.User;
 import ua.deti.tqs.backend.repositories.RestaurantRepository;
 import ua.deti.tqs.backend.repositories.UserRepository;
 import ua.deti.tqs.backend.utils.Constants;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-public class RestaurantControllerIT {
+class RestaurantControllerIT {
     @Container
     private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("testdb")

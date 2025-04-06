@@ -13,7 +13,6 @@ import ua.deti.tqs.backend.entities.UserMeal;
 import ua.deti.tqs.backend.entities.utils.UserRole;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -101,6 +100,6 @@ class UserMealRepositoryTest {
     @Test
     void whenCountByInvalidMealId_thenReturnZero() {
         int count = userMealRepository.countByMealId(999L);
-        assertThat(count).isEqualTo(0);
+        assertThat(count).isZero();
     }
 }

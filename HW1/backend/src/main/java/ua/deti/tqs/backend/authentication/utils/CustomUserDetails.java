@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import ua.deti.tqs.backend.entities.utils.UserRole;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
@@ -19,7 +20,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

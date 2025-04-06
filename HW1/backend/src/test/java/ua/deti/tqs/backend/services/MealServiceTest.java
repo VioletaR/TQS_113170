@@ -3,7 +3,6 @@ package ua.deti.tqs.backend.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -12,7 +11,6 @@ import ua.deti.tqs.backend.entities.Meal;
 import ua.deti.tqs.backend.entities.Restaurant;
 import ua.deti.tqs.backend.repositories.MealRepository;
 import ua.deti.tqs.backend.repositories.RestaurantRepository;
-import ua.deti.tqs.backend.services.MealServiceImpl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
