@@ -3,7 +3,9 @@ package ua.deti.tqs.backend.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ua.deti.tqs.backend.entities.utils.UserRole;
 
@@ -11,6 +13,8 @@ import ua.deti.tqs.backend.entities.utils.UserRole;
 @Setter
 @Entity
 @Table(name = "\"user\"")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,17 +2,12 @@
 //
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import org.springframework.test.context.ActiveProfiles;
-//import org.springframework.web.client.RestTemplate;
+//import org.mockito.ArgumentMatchers;
 //import org.springframework.core.ParameterizedTypeReference;
-//import org.springframework.http.HttpMethod;
 //import org.springframework.http.HttpStatus;
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.web.client.RestClientException;
+//import org.springframework.web.client.RestTemplate;
 //import ua.deti.tqs.backend.dtos.Forecast;
 //import ua.deti.tqs.backend.dtos.Location;
 //import ua.deti.tqs.backend.entities.utils.WeatherIPMA;
@@ -20,94 +15,98 @@
 //import java.time.LocalDateTime;
 //import java.util.*;
 //
-//import static org.assertj.core.api.Assertions.assertThat;
-//import static org.mockito.ArgumentMatchers.*;
-//import static org.mockito.Mockito.when;
-//import static ua.deti.tqs.backend.utils.Constants.BASE_URL_FORECAST;
-//import static ua.deti.tqs.backend.utils.Constants.BASE_URL_LOCATIONS;
+//import static org.junit.jupiter.api.Assertions.*;
+//import static org.mockito.Mockito.*;
 //
-//
-//@ActiveProfiles("test")
-//@ExtendWith(MockitoExtension.class)
 //public class WeatherServiceTest {
 //
-//    @Mock
+//    private WeatherServiceImpl weatherService;
 //    private RestTemplate restTemplate;
 //
-//    @InjectMocks
-//    private WeatherServiceImpl weatherService;
-//
-//    @Test
-//    void getAllLocations_SuccessfulResponse_ReturnsLocations() {
-//        Map<String, Object> locationData = new HashMap<>();
-//        locationData.put("idRegiao", 1);
-//        locationData.put("idAreaAviso", "Aviso1");
-//        locationData.put("idConcelho", 10);
-//        locationData.put("globalIdLocal", 100);
-//        locationData.put("latitude", "40.0");
-//        locationData.put("idDistrito", 5);
-//        locationData.put("local", "Lisbon");
-//        locationData.put("longitude", "-8.0");
-//
-//        ResponseEntity<List<Map<String, Object>>> mockResponse =
-//                new ResponseEntity<>(List.of(locationData), HttpStatus.OK);
-//
-//        when(restTemplate.exchange(anyString(), any(), any(), any()))
-//                .thenReturn(mockResponse);
-//
-//        List<Location> result = weatherService.getAllLocations();
-//        assertThat(result).hasSize(1);
-//        assertThat(result.get(0).local()).isEqualTo("Lisbon");
+//    @BeforeEach
+//    void setUp() {
+//        restTemplate = mock(RestTemplate.class);
+//        weatherService = new WeatherServiceImpl();
 //    }
 //
 //    @Test
-//    void getForecastByLocation_ValidId_ReturnsFilteredForecasts() {
-//        int locationId = 100;
-//        Forecast forecast = new Forecast(
-//                "10.0", "20.0", "3", 50, 1, 100, "50",
-//                "2024-03-10T00:00:00", "NW", 2, "2024-03-10", 24
+//    void testGetAllLocations_success() {
+//        Map<String, Object> locationMap = Map.of(
+//                "idRegiao", 1,
+//                "idAreaAviso", "AV001",
+//                "idConcelho", 101,
+//                "globalIdLocal", 123,
+//                "latitude", "40.0",
+//                "idDistrito", 10,
+//                "local", "Aveiro",
+//                "longitude", "-8.0"
 //        );
 //
-//        ResponseEntity<List<Forecast>> mockResponse =
-//                new ResponseEntity<>(List.of(forecast), HttpStatus.OK);
+//        ResponseEntity<List<Map<String, Object>>> response =
+//                new ResponseEntity<>(List.of(locationMap), HttpStatus.OK);
 //
-//        when(restTemplate.exchange(anyString(), any(), any(), any()))
-//                .thenReturn(mockResponse);
+//        when(restTemplate.exchange(
+//                eq("http://api.ipma.pt/open-data/distrits-islands.json"),  // BASE_URL_LOCATIONS
+//                eq(org.springframework.http.HttpMethod.GET),
+//                isNull(),
+//                ArgumentMatchers.<ParameterizedTypeReference<List<Map<String, Object>>>>any())
+//        ).thenReturn(response);
 //
-//        List<Forecast> result = weatherService.getForecastByLocation(locationId);
-//        assertThat(result).hasSize(1);
-//        assertThat(result.get(0).periodId()).isEqualTo(24);
+//        List<Location> locations = weatherService.getAllLocations();
+//        assertEquals(1, locations.size());
+//        assertEquals("Aveiro", locations.get(0).local());
 //    }
 //
 //    @Test
-//    void getWeatherForDate_ExactMatch_ReturnsWeather() {
-//        LocalDateTime date = LocalDateTime.parse("2024-03-10T00:00:00");
-//        Forecast forecast = new Forecast(
-//                "10.0", "20.0", "3", 50, 1, 100, "50",
-//                "2024-03-10T00:00:00", "NW", 2, "2024-03-10", 24
-//        );
+//    void testGetAllLocations_error() {
+//        when(restTemplate.exchange(anyString(), any(), any(), ArgumentMatchers.<ParameterizedTypeReference<List<Map<String, Object>>>>any()))
+//                .thenThrow(new RestClientException("Failed"));
 //
-//        Optional<WeatherIPMA> result =
-//                weatherService.getWeatherForDate(List.of(forecast), date);
-//
-//        assertThat(result).isPresent();
-//        assertThat(result.get().getMinTemp()).isEqualTo(10.0);
-//        assertThat(result.get().getMaxTemp()).isEqualTo(20.0);
+//        List<Location> locations = weatherService.getAllLocations();
 //    }
 //
 //    @Test
-//    void getLocationId_ExistingName_ReturnsId() {
-//        Map<String, Object> locationData = new HashMap<>();
-//        locationData.put("local", "Lisbon");
-//        locationData.put("globalIdLocal", 100);
+//    void testGetForecastByLocation_success() {
+//        Forecast forecast = new Forecast("10", "20", "5", 1, 0, 123, "30%", "2025-04-06T00:00:00", "N", 0, "2025-04-05T00:00:00", 24);
+//        ResponseEntity<List<Forecast>> response = new ResponseEntity<>(List.of(forecast), HttpStatus.OK);
 //
-//        ResponseEntity<List<Map<String, Object>>> mockResponse =
-//                new ResponseEntity<>(List.of(locationData), HttpStatus.OK);
+//        when(restTemplate.exchange(anyString(), any(), any(), ArgumentMatchers.<ParameterizedTypeReference<List<Forecast>>>any()))
+//                .thenReturn(response);
 //
-//        when(restTemplate.exchange(anyString(), any(), any(), any()))
-//                .thenReturn(mockResponse);
+//        List<Forecast> forecasts = weatherService.getForecastByLocation(123);
+//        assertEquals(1, forecasts.size());
+//        assertEquals("10", forecasts.get(0).minTemp());
+//    }
 //
-//        Optional<Integer> result = weatherService.getLocationId("lisbon");
-//        assertThat(result).contains(100);
+//    @Test
+//    void testGetForecastByLocation_error() {
+//        when(restTemplate.exchange(anyString(), any(), any(), ArgumentMatchers.<ParameterizedTypeReference<List<Forecast>>>any()))
+//                .thenThrow(new RestClientException("Failed"));
+//
+//        List<Forecast> forecasts = weatherService.getForecastByLocation(123);
+//        assertTrue(forecasts.isEmpty());
+//    }
+//
+//    @Test
+//    void testGetLocationId_found() {
+//        Location location = new Location(1, "AV001", 101, 123, "40.0", 10, "Aveiro", "-8.0");
+//
+//        WeatherServiceImpl serviceSpy = spy(weatherService);
+//        doReturn(List.of(location)).when(serviceSpy).getAllLocations();
+//
+//        Optional<Integer> locationId = serviceSpy.getLocationId("Aveiro");
+//        assertTrue(locationId.isPresent());
+//        assertEquals(123, locationId.get());
+//    }
+//
+//    @Test
+//    void testGetWeatherForDate_closestMatch() {
+//        LocalDateTime targetDate = LocalDateTime.of(2025, 4, 6, 12, 0);
+//        Forecast forecast1 = new Forecast("10", "20", "5", 1, 0, 123, "30%", "2025-04-05T00:00:00", "N", 0, "2025-04-04T00:00:00", 24);
+//        Forecast forecast2 = new Forecast("11", "21", "6", 2, 1, 123, "40%", "2025-04-07T00:00:00", "S", 1, "2025-04-06T00:00:00", 24);
+//
+//        Optional<WeatherIPMA> weather = weatherService.getWeatherForDate(List.of(forecast1, forecast2), targetDate);
+//        assertTrue(weather.isPresent());
+//        assertEquals("5", weather.get().getIUv());
 //    }
 //}
