@@ -195,6 +195,15 @@ class MealControllerTest {
                 .andExpect(jsonPath("$[0].weatherIPMA.iuv").value("10"));
 
     }
+
+    @Test
+    void whenGetAllMealsForRestaurantAndNoMeals_thenReturnNotFound() throws Exception {
+        when(mealService.getAllMealsByRestaurantId(1L)).thenReturn(List.of());
+
+        mockMvc.perform(get("/"+Constants.API_PATH_V1+"meals/all/1"))
+                .andExpect(status().isNotFound());
+    }
+
     @Test
     void whenGetNonExistingMeal_thenReturnNotFound() throws Exception {
         when(mealService.getMealById(999L)).thenReturn(null);
