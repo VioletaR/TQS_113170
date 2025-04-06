@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ua.deti.tqs.backend.entities.UserMeal;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 

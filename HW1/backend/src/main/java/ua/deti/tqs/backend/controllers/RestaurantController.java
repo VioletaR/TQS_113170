@@ -13,6 +13,8 @@ import ua.deti.tqs.backend.entities.Restaurant;
 import ua.deti.tqs.backend.services.interfaces.RestaurantService;
 import ua.deti.tqs.backend.utils.Constants;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping(Constants.API_PATH_V1 + "restaurant")
@@ -23,10 +25,8 @@ public class RestaurantController {
 
     @PostMapping()
     @Operation(summary = "Create a new restaurant", description = "Adds a new restaurant to the system.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Restaurant created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body")
-    })
+    @ApiResponse(responseCode = "201", description = "Restaurant created successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request body")
     public ResponseEntity<Restaurant> createRestaurant(@RequestBody Restaurant restaurant) {
         log.info("Creating a new restaurant");
 
@@ -43,10 +43,8 @@ public class RestaurantController {
 
     @GetMapping("{id}")
     @Operation(summary = "Get a restaurant by ID", description = "Fetches a restaurant based on its unique ID.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Restaurant found"),
-            @ApiResponse(responseCode = "404", description = "Restaurant not found")
-    })
+    @ApiResponse(responseCode = "200", description = "Restaurant found")
+    @ApiResponse(responseCode = "404", description = "Restaurant not found")
     public ResponseEntity<Restaurant> getRestaurant(@PathVariable("id") Long id) {
         log.info("Fetching a restaurant by ID: {}", id);
 
@@ -62,10 +60,8 @@ public class RestaurantController {
 
     @GetMapping("name/{name}")
     @Operation(summary = "Get a restaurant by name", description = "Fetches a restaurant based on its name.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Restaurant found"),
-            @ApiResponse(responseCode = "404", description = "Restaurant not found")
-    })
+    @ApiResponse(responseCode = "200", description = "Restaurant found")
+    @ApiResponse(responseCode = "404", description = "Restaurant not found")
     public ResponseEntity<Restaurant> getRestaurantByName(@PathVariable("name") String name) {
         log.info("Fetching a restaurant by name: {}", name);
 
@@ -83,26 +79,25 @@ public class RestaurantController {
     @GetMapping("all")
     @Operation(summary = "Get all restaurants", description = "Fetches a list of all restaurants.")
     @ApiResponse(responseCode = "200", description = "List of restaurants retrieved successfully")
-    public ResponseEntity<Iterable<Restaurant>> getAllRestaurants() {
+    @ApiResponse(responseCode = "404", description = "No restaurants found")
+    public ResponseEntity<List<Restaurant>> getAllRestaurants() {
         log.info("Fetching all restaurants");
 
-        Iterable<Restaurant> restaurants = restaurantService.getAllRestaurants();
-        HttpStatus status = restaurants != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+        List<Restaurant> restaurants = restaurantService.getAllRestaurants();
 
-        if (restaurants != null) {
-            log.info("Restaurants retrieved successfully");
-        } else {
+        if (restaurants.isEmpty()) {
             log.warn("No restaurants found");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         }
-        return new ResponseEntity<>(restaurants, status);
+        log.info("Restaurants retrieved successfully");
+        return new ResponseEntity<>(restaurants, HttpStatus.OK );
     }
 
     @PutMapping()
     @Operation(summary = "Update a restaurant", description = "Updates an existing restaurant's details.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Restaurant updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body")
-    })
+    @ApiResponse(responseCode = "200", description = "Restaurant updated successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request body")
     public ResponseEntity<Restaurant> updateRestaurant(@RequestBody Restaurant restaurant) {
         log.info("Updating restaurant with ID: {}", restaurant.getId());
 
@@ -119,10 +114,8 @@ public class RestaurantController {
 
     @DeleteMapping("{id}")
     @Operation(summary = "Delete a restaurant", description = "Deletes a restaurant by its unique ID.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Restaurant deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Restaurant not found")
-    })
+    @ApiResponse(responseCode = "204", description = "Restaurant deleted successfully")
+    @ApiResponse(responseCode = "404", description = "Restaurant not found")
     public ResponseEntity<Void> deleteRestaurant(@PathVariable("id") Long id) {
         log.info("Deleting restaurant with ID: {}", id);
 

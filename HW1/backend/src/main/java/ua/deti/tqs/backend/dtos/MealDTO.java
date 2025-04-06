@@ -7,7 +7,6 @@ import ua.deti.tqs.backend.entities.Meal;
 import ua.deti.tqs.backend.entities.utils.WeatherIPMA;
 import ua.deti.tqs.backend.services.interfaces.WeatherService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

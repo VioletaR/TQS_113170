@@ -8,10 +8,6 @@ import ua.deti.tqs.backend.entities.utils.WeatherIPMA;
 import ua.deti.tqs.backend.services.interfaces.WeatherService;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 @Slf4j
 @Getter
 @NoArgsConstructor

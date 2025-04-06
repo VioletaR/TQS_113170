@@ -96,7 +96,7 @@ class MealControllerIT {
                 .post(Constants.API_PATH_V1 + "meals")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("meal", equalTo("Test Meal"))
+                .body("name", equalTo("Test Meal"))
                 .body("price", equalTo(10));
 
         assertThat(mealRepository.count()).isEqualTo(1);
@@ -137,7 +137,7 @@ class MealControllerIT {
                 .get(Constants.API_PATH_V1 + "meals/{id}")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("meal.meal", equalTo("Weather Meal"))
+                .body("meal.name", equalTo("Weather Meal"))
                 .body("weatherIPMA.tempMin", equalTo("15"))
                 .body("weatherIPMA.tempMax", equalTo("25"));
     }
@@ -165,7 +165,7 @@ class MealControllerIT {
                 .get(Constants.API_PATH_V1 + "meals/{id}")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("meal.meal", equalTo("No Weather Meal"))
+                .body("meal.name", equalTo("No Weather Meal"))
                 .body("weatherIPMA", nullValue());
     }
 
@@ -209,11 +209,11 @@ class MealControllerIT {
                 .put(Constants.API_PATH_V1 + "meals")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("meal", equalTo("Updated Meal"))
+                .body("name", equalTo("Updated Meal"))
                 .body("price", equalTo(2));
 
         Meal updated = mealRepository.findById(originalMeal.getId()).orElseThrow();
-        assertThat(updated.getMeal()).isEqualTo("Updated Meal");
+        assertThat(updated.getName()).isEqualTo("Updated Meal");
     }
 
     @Test

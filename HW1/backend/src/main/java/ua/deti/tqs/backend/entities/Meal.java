@@ -12,7 +12,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -44,7 +43,7 @@ public class Meal {
 
     @Size(max = 255)
     @NotNull
-    @Column(name = "meal", nullable = false)
-    private String meal;
+    @Column(name = "name", nullable = false)
+    private String name;
 
 }

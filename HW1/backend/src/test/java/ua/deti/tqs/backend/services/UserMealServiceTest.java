@@ -19,6 +19,7 @@ import ua.deti.tqs.backend.repositories.UserRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,7 +70,7 @@ class UserMealServiceTest {
 
         meal1 = new Meal();
         meal1.setId(1L);
-        meal1.setMeal("meal1");
+        meal1.setName("meal1");
         meal1.setRestaurant(restaurant1);
         meal1.setPrice(BigDecimal.valueOf(10));
         meal1.setDate(LocalDateTime.now());
@@ -197,13 +198,13 @@ class UserMealServiceTest {
     @Test
     void getAllUserMealsByUserId_UserNotOwner_ReturnsNull() {
         when(currentUser.getAuthenticatedUserId()).thenReturn(2L);
-        assertNull(userMealService.getAllUserMealsByUserId(user1.getId()));
+        assertEquals(userMealService.getAllUserMealsByUserId(user1.getId()), Collections.emptyList());
     }
 
     @Test
     void getAllUserMealsByUserId_NoAuthenticatedUser_ReturnsNull() {
         when(currentUser.getAuthenticatedUserId()).thenReturn(null);
-        assertNull(userMealService.getAllUserMealsByUserId(user1.getId()));
+        assertEquals(userMealService.getAllUserMealsByUserId(user1.getId()), Collections.emptyList());
     }
 
     @Test
@@ -216,13 +217,13 @@ class UserMealServiceTest {
     @Test
     void getAllUserMealsByRestaurantId_UserNotStaff_ReturnsNull() {
         when(currentUser.getAuthenticatedUserRole()).thenReturn(UserRole.USER);
-        assertNull(userMealService.getAllUserMealsByRestaurantId(restaurant1.getId()));
+        assertEquals(userMealService.getAllUserMealsByRestaurantId(restaurant1.getId()), Collections.emptyList());
     }
 
     @Test
     void getAllUserMealsByRestaurantId_NoAuthenticatedUser_ReturnsNull() {
         when(currentUser.getAuthenticatedUserRole()).thenReturn(null);
-        assertNull(userMealService.getAllUserMealsByRestaurantId(restaurant1.getId()));
+        assertEquals(userMealService.getAllUserMealsByRestaurantId(restaurant1.getId()), Collections.emptyList());
     }
 
     @Test

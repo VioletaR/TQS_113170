@@ -27,12 +27,12 @@ CREATE TABLE meal
     restaurant_id BIGINT NOT NULL,
     price         NUMERIC(10,2) NOT NULL,
     meal_date          TIMESTAMP NOT NULL,
-    meal          VARCHAR(255) NOT NULL,
+    name          VARCHAR(255) NOT NULL,
 
     CONSTRAINT pk_meal PRIMARY KEY (id),
     CONSTRAINT fk_meal_on_restaurant FOREIGN KEY (restaurant_id)
         REFERENCES restaurant (id) ON DELETE CASCADE,
-    CONSTRAINT unique_meal_per_day UNIQUE (restaurant_id, meal, meal_date)
+    CONSTRAINT unique_meal_per_day UNIQUE (restaurant_id, name, meal_date)
 );
 
 CREATE TABLE user_meal

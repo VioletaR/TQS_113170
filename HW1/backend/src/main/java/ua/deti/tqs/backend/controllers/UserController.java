@@ -27,10 +27,8 @@ public class UserController {
 
     @PostMapping("v1/users")
     @Operation(summary = "Create a new user", description = "Adds a new user to the system.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "User created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body")
-    })
+    @ApiResponse(responseCode = "201", description = "User created successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request body")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         log.info("Creating a new user");
 
@@ -47,10 +45,8 @@ public class UserController {
 
     @GetMapping("private/v1/users/{id}")
     @Operation(summary = "Get a user by Id", description = "Fetches a user based on its unique ID.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "User found"),
-            @ApiResponse(responseCode = "404", description = "User not found")
-    })
+    @ApiResponse(responseCode = "200", description = "User found")
+    @ApiResponse(responseCode = "404", description = "User not found")
     public ResponseEntity<User> getUser(@PathVariable("id") Long id) {
         log.info("Fetching a user by ID: {}", id);
 
@@ -67,10 +63,8 @@ public class UserController {
 
     @GetMapping("private/v1/users/name/{name}")
     @Operation(summary = "Get a user by name", description = "Fetches a user based on its name.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "User found"),
-            @ApiResponse(responseCode = "404", description = "User not found")
-    })
+    @ApiResponse(responseCode = "200", description = "User found")
+    @ApiResponse(responseCode = "404", description = "User not found")
     public ResponseEntity<User> getUserByName(@PathVariable("name") String name) {
         log.info("Fetching a user by name: {}", name);
 
@@ -87,10 +81,8 @@ public class UserController {
 
     @PutMapping("private/v1/users")
     @Operation(summary = "Update a user", description = "Updates an existing user's details.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "User updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body")
-    })
+    @ApiResponse(responseCode = "200", description = "User updated successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request body")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         log.info("Updating user with ID: {}", user.getId());
 
@@ -107,10 +99,8 @@ public class UserController {
 
     @DeleteMapping("private/v1/users/{id}")
     @Operation(summary = "Delete a user", description = "Deletes a user by its unique ID.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "User deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "User not found")
-    })
+    @ApiResponse(responseCode = "204", description = "User deleted successfully")
+    @ApiResponse(responseCode = "404", description = "User not found")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
         log.info("Deleting user with ID: {}", id);
 

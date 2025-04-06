@@ -16,6 +16,7 @@ import ua.deti.tqs.backend.utils.Constants;
 import org.springframework.http.MediaType;
 
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -98,7 +99,7 @@ class RestaurantControllerTest {
 
     @Test
     void whenGetAllRestaurants_andNoRestaurantsExist_thenReturnNotFound() throws Exception {
-        when(restaurantService.getAllRestaurants()).thenReturn(null);
+        when(restaurantService.getAllRestaurants()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/"+Constants.API_PATH_V1+"restaurant/all"))
                 .andExpect(status().isNotFound());

@@ -29,10 +29,8 @@ class MealRepositoryTest {
 
     private Meal meal1;
     private Meal meal2;
-    private Meal meal3;
 
     private Restaurant restaurant1;
-    private Restaurant restaurant2;
 
     @BeforeEach
     void setUp() {
@@ -41,36 +39,23 @@ class MealRepositoryTest {
         restaurant1.setLocation("location1");
         restaurant1.setSeats(10);
 
-        restaurant2 = new Restaurant();
-        restaurant2.setName("restaurant2");
-        restaurant2.setLocation("location2");
-        restaurant2.setSeats(20);
-
         entityManager.persist(restaurant1);
-        entityManager.persist(restaurant2);
 
 
         meal1 = new Meal();
-        meal1.setMeal("meal1");
+        meal1.setName("meal1");
         meal1.setRestaurant(restaurant1);
         meal1.setDate(LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         meal1.setPrice(BigDecimal.valueOf(10));
 
         meal2 = new Meal();
-        meal2.setMeal("meal2");
+        meal2.setName("meal2");
         meal2.setRestaurant(restaurant1);
         meal2.setDate(LocalDateTime.now());
         meal2.setPrice(BigDecimal.valueOf(20));
 
-        meal3 = new Meal();
-        meal3.setMeal("meal3");
-        meal3.setRestaurant(restaurant2);
-        meal3.setDate(LocalDateTime.now());
-        meal3.setPrice(BigDecimal.valueOf(30));
-
         entityManager.persist(meal1);
         entityManager.persist(meal2);
-        entityManager.persist(meal3);
     }
 
     @Test
@@ -100,13 +85,13 @@ class MealRepositoryTest {
 
     @Test
     void whenFindMealByMealAndRestaurantAndDate_thenReturnMeal() {
-        Meal found = mealRepository.findMealByMealAndRestaurantAndDate(meal1.getMeal(), restaurant1, meal1.getDate()).orElse(null);
+        Meal found = mealRepository.findMealByNameAndRestaurantAndDate(meal1.getName(), restaurant1, meal1.getDate()).orElse(null);
         assertThat(found).isEqualTo(meal1);
     }
 
     @Test
     void whenFindMealByInvalidMealAndRestaurantAndDate_thenReturnNull() {
-        Meal fromDb = mealRepository.findMealByMealAndRestaurantAndDate("invalid", restaurant1, LocalDateTime.now()).orElse(null);
+        Meal fromDb = mealRepository.findMealByNameAndRestaurantAndDate("invalid", restaurant1, LocalDateTime.now()).orElse(null);
         assertThat(fromDb).isNull();
     }
 
@@ -119,19 +104,19 @@ class MealRepositoryTest {
 
     @Test
     void whenUpdateMeal_thenMealShouldBeUpdated() {
-        meal1.setMeal("updatedMeal");
+        meal1.setName("updatedMeal");
         meal1.setPrice(BigDecimal.valueOf(15));
 
         Meal updated = mealRepository.save(meal1);
 
-        assertThat(updated.getMeal()).isEqualTo("updatedMeal");
+        assertThat(updated.getName()).isEqualTo("updatedMeal");
         assertThat(updated.getPrice()).isEqualTo(BigDecimal.valueOf(15));
     }
 
     @Test
     void whenCreateMeal_thenReturnMeal() {
         Meal newMeal = new Meal();
-        newMeal.setMeal("newMeal");
+        newMeal.setName("newMeal");
         newMeal.setRestaurant(restaurant1);
         newMeal.setDate(LocalDateTime.now());
         newMeal.setPrice(BigDecimal.valueOf(25));
@@ -139,7 +124,7 @@ class MealRepositoryTest {
         Meal created = mealRepository.save(newMeal);
 
         assertThat(created.getId()).isNotNull();
-        assertThat(created.getMeal()).isEqualTo("newMeal");
+        assertThat(created.getName()).isEqualTo("newMeal");
         assertThat(created.getPrice()).isEqualTo(BigDecimal.valueOf(25));
     }
 

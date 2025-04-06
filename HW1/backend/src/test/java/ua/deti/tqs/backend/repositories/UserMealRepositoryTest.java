@@ -50,7 +50,7 @@ class UserMealRepositoryTest {
         entityManager.persist(user1);
 
         meal1 = new Meal();
-        meal1.setMeal("meal1");
+        meal1.setName("meal1");
         meal1.setDate(LocalDateTime.now());
         meal1.setPrice(BigDecimal.valueOf(10));
         meal1.setRestaurant(restaurant1);

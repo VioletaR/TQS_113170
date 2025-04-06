@@ -2,7 +2,6 @@ package ua.deti.tqs.backend.services;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ua.deti.tqs.backend.authentication.utils.CurrentUser;
 import ua.deti.tqs.backend.entities.Meal;
@@ -14,9 +13,7 @@ import ua.deti.tqs.backend.repositories.UserMealRepository;
 import ua.deti.tqs.backend.repositories.UserRepository;
 import ua.deti.tqs.backend.services.interfaces.UserMealService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 
@@ -88,16 +85,16 @@ public class UserMealServiceImpl implements UserMealService {
 
     @Override
     public List<UserMeal> getAllUserMealsByUserId(Long id){
-        if (currentUser.getAuthenticatedUserId() == null || !currentUser.getAuthenticatedUserId().equals(id)) return null;
+        if (currentUser.getAuthenticatedUserId() == null || !currentUser.getAuthenticatedUserId().equals(id)) return Collections.emptyList();
 
-        return userMealRepository.findAllByUserId(id).orElse(null);
+        return userMealRepository.findAllByUserId(id).orElse(Collections.emptyList());
     }
 
     @Override
     public List<UserMeal> getAllUserMealsByRestaurantId(Long restaurantId) {
-        if (currentUser.getAuthenticatedUserRole() == null ||  !currentUser.getAuthenticatedUserRole().equals(UserRole.STAFF)) return null;
+        if (currentUser.getAuthenticatedUserRole() == null ||  !currentUser.getAuthenticatedUserRole().equals(UserRole.STAFF)) return Collections.emptyList();
 
-        return userMealRepository.findAllByMeal_RestaurantId(restaurantId).orElse(null);
+        return userMealRepository.findAllByMeal_RestaurantId(restaurantId).orElse(Collections.emptyList());
     }
 
     @Override

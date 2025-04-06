@@ -10,7 +10,7 @@ INSERT INTO restaurant (name, seats, location) VALUES
                                                    ('Vegan Delights', 15, 'Aveiro'),
                                                    ('BBQ King', 40, 'Aveiro');
 
-INSERT INTO meal (restaurant_id, meal, price, meal_date) VALUES
+INSERT INTO meal (restaurant_id, name, price, meal_date) VALUES
                                                         (1, 'Spaghetti Carbonara', 12.99, '2025-04-04 12:00:00'),
                                                         (1, 'Margherita Pizza', 10.50, '2025-04-04 12:30:00'),
                                                         (2, 'Cheeseburger', 8.99, '2025-04-04 13:00:00'),

@@ -45,7 +45,7 @@ class MealServiceTest {
 
         meal1 = new Meal();
         meal1.setId(1L);
-        meal1.setMeal("meal1");
+        meal1.setName("meal1");
         meal1.setDate(LocalDateTime.now());
         meal1.setPrice(BigDecimal.valueOf(10));
         meal1.setRestaurant(restaurant1);
@@ -66,7 +66,7 @@ class MealServiceTest {
     void whenCreateMealWithInvalidData_thenReturnNull() {
         // Test invalid meal name
         Meal invalid = new Meal();
-        invalid.setMeal("");
+        invalid.setName("");
         invalid.setPrice(BigDecimal.valueOf(5));
         invalid.setRestaurant(restaurant1);
         invalid.setDate(LocalDateTime.now());
@@ -76,7 +76,7 @@ class MealServiceTest {
         verify(mealRepository, never()).save(any());
 
         // Test negative price
-        invalid.setMeal("meal1");
+        invalid.setName("meal1");
         invalid.setPrice(BigDecimal.valueOf(-5));
         result = mealService.createMeal(invalid);
         assertThat(result).isNull();
@@ -102,7 +102,7 @@ class MealServiceTest {
     void whenCreateMealWithNullFields_thenReturnNull() {
         // Test null meal name
         Meal invalid = new Meal();
-        invalid.setMeal(null);
+        invalid.setName(null);
         invalid.setDate(LocalDateTime.now());
 
         Meal result = mealService.createMeal(invalid);
@@ -110,7 +110,7 @@ class MealServiceTest {
         verify(mealRepository, never()).save(any());
 
         // Test null price
-        invalid.setMeal("meal1");
+        invalid.setName("meal1");
         invalid.setDate(LocalDateTime.now());
         invalid.setPrice(null);
         result = mealService.createMeal(invalid);
@@ -131,7 +131,7 @@ class MealServiceTest {
         LocalDateTime date = LocalDateTime.now();
         meal1.setDate(date);
         when(restaurantRepository.findById(1L)).thenReturn(Optional.of(restaurant1));
-        when(mealRepository.findMealByMealAndRestaurantAndDate("meal1", restaurant1, date))
+        when(mealRepository.findMealByNameAndRestaurantAndDate("meal1", restaurant1, date))
                 .thenReturn(Optional.of(meal1));
 
 
@@ -181,7 +181,7 @@ class MealServiceTest {
     void whenUpdateExistingMeal_thenReturnUpdatedMeal() {
         Meal updatedMeal = new Meal();
         updatedMeal.setId(1L);
-        updatedMeal.setMeal("updated meal");
+        updatedMeal.setName("updated meal");
         updatedMeal.setPrice(BigDecimal.valueOf(15));
         updatedMeal.setDate(LocalDateTime.now().plusDays(1));
         updatedMeal.setRestaurant(restaurant1);
@@ -191,7 +191,7 @@ class MealServiceTest {
 
         Meal result = mealService.updateMeal(updatedMeal);
 
-        assertThat(result.getMeal()).isEqualTo("updated meal");
+        assertThat(result.getName()).isEqualTo("updated meal");
         assertThat(result.getPrice()).isEqualTo(BigDecimal.valueOf(15));
         verify(mealRepository).save(meal1);
     }
@@ -212,7 +212,7 @@ class MealServiceTest {
     void whenUpdateMealWithInvalidData_thenReturnNull() {
         Meal invalid = new Meal();
         invalid.setId(1L);
-        invalid.setMeal("");
+        invalid.setName("");
         invalid.setPrice(BigDecimal.valueOf(-5));
         invalid.setRestaurant(restaurant1);
 
@@ -227,7 +227,7 @@ class MealServiceTest {
     void whenUpdateMealWithNullFields_thenReturnNull() {
         Meal invalid = new Meal();
         invalid.setId(1L);
-        invalid.setMeal(null);
+        invalid.setName(null);
         invalid.setPrice(null);
         invalid.setRestaurant(null);
 

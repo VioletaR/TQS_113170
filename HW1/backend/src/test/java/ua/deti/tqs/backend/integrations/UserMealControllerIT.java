@@ -118,7 +118,7 @@ class UserMealControllerIT {
                 .post(Constants.API_PATH_PRIVATE_V1 + "user-meal")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("meal.meal", equalTo("Test Meal"))
+                .body("meal.name", equalTo("Test Meal"))
                 .body("code", not(equalTo(booking.getCode())))
                 .body("isCheck", equalTo(false));
 

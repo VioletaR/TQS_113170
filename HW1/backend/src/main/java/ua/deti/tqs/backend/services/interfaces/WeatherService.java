@@ -4,7 +4,6 @@ import ua.deti.tqs.backend.dtos.Location;
 import ua.deti.tqs.backend.dtos.Forecast;
 import ua.deti.tqs.backend.entities.utils.WeatherIPMA;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

@@ -28,10 +28,8 @@ public class MealController {
 
     @PostMapping()
     @Operation(summary = "Create a new meal", description = "Adds a new meal to the system.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Meal created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body")
-    })
+    @ApiResponse(responseCode = "201", description = "Meal created successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request body")
     public ResponseEntity<Meal> createMeal(@RequestBody Meal meal) {
         log.info("Creating a new meal");
         Meal newMeal = mealService.createMeal(meal);
@@ -47,10 +45,8 @@ public class MealController {
 
     @GetMapping("{id}")
     @Operation(summary = "Get a meal by Id", description = "Fetches a meal based on its unique ID.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Meal found"),
-            @ApiResponse(responseCode = "404", description = "Meal not found")
-    })
+    @ApiResponse(responseCode = "200", description = "Meal found")
+    @ApiResponse(responseCode = "404", description = "Meal not found")
     public ResponseEntity<MealDTO> getMeal(@PathVariable("id") Long id) {
         log.info("Fetching a meal by ID: {}", id);
 
@@ -70,10 +66,14 @@ public class MealController {
     @GetMapping("all/{restaurantId}")
     @Operation(summary = "Get all meals", description = "Fetches a list of all meals per restaurant id.")
     @ApiResponse(responseCode = "200", description = "List of meals retrieved successfully")
+    @ApiResponse(responseCode = "404", description = "No meals found for the given restaurant ID")
     public ResponseEntity<List<MealDTO>> getAllMealsByRestaurantId(@PathVariable("restaurantId") Long restaurantId) {
         log.info("Fetching all meals for restaurant ID: {}", restaurantId);
         List<Meal> meals = mealService.getAllMealsByRestaurantId(restaurantId);
-
+        if (meals.isEmpty()) {
+            log.warn("No meals found for restaurant ID: {}", restaurantId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
 
         List<MealDTO> mealDTOs = meals.stream()
                 .map(meal ->  MealDTO.fromMeal(meal, weatherService))
@@ -86,10 +86,8 @@ public class MealController {
 
     @PutMapping()
     @Operation(summary = "Update a meal", description = "Updates an existing meal's details.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Meal updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body")
-    })
+    @ApiResponse(responseCode = "200", description = "Meal updated successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request body")
     public ResponseEntity<Meal> updateMeal(@RequestBody Meal meal) {
         log.info("Updating meal with ID: {}", meal.getId());
 
@@ -107,10 +105,8 @@ public class MealController {
 
     @DeleteMapping("{id}")
     @Operation(summary = "Delete a meal", description = "Deletes a meal by its unique ID.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Meal deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Meal not found")
-    })
+    @ApiResponse(responseCode = "204", description = "Meal deleted successfully")
+    @ApiResponse(responseCode = "404", description = "Meal not found")
     public ResponseEntity<Void> deleteMeal(@PathVariable("id") Long id) {
         log.info("Deleting meal with ID: {}", id);
 

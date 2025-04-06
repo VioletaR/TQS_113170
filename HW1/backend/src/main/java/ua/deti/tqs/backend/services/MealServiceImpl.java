@@ -8,6 +8,7 @@ import ua.deti.tqs.backend.repositories.MealRepository;
 import ua.deti.tqs.backend.repositories.RestaurantRepository;
 import ua.deti.tqs.backend.services.interfaces.MealService;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -19,14 +20,14 @@ public class MealServiceImpl implements MealService {
     @Override
     public Meal createMeal(Meal meal) {
         if (meal.getDate() == null
-                || meal.getMeal() == null || meal.getMeal().trim().isEmpty()
+                || meal.getName() == null || meal.getName().trim().isEmpty()
                 || meal.getPrice() == null || meal.getPrice().compareTo(BigDecimal.ZERO) <= 0
                 || meal.getRestaurant() == null) return null;
 
         Restaurant restaurant = restaurantRepository.findById(meal.getRestaurant().getId()).orElse(null);
         if (restaurant == null) return null;
 
-        Meal existingMeal = mealRepository.findMealByMealAndRestaurantAndDate(meal.getMeal(), restaurant, meal.getDate()).orElse(null);
+        Meal existingMeal = mealRepository.findMealByNameAndRestaurantAndDate(meal.getName(), restaurant, meal.getDate()).orElse(null);
         if (existingMeal != null) return null;
 
         meal.setRestaurant(restaurant);
@@ -43,7 +44,7 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public List<Meal> getAllMealsByRestaurantId(Long restaurantId) {
-        return mealRepository.findAllByRestaurantId(restaurantId).orElse(null);
+        return mealRepository.findAllByRestaurantId(restaurantId).orElse(Collections.emptyList());
     }
 
     @Override
@@ -54,8 +55,8 @@ public class MealServiceImpl implements MealService {
         if (existingMeal == null) return null;
 
         int changedFields = 0;
-        if (meal.getMeal() != null && !meal.getMeal().trim().isEmpty()) {
-            existingMeal.setMeal(meal.getMeal());
+        if (meal.getName() != null && !meal.getName().trim().isEmpty()) {
+            existingMeal.setName(meal.getName());
             changedFields++;
         }
 

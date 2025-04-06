@@ -10,9 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.deti.tqs.backend.dtos.MealDTO;
 import ua.deti.tqs.backend.dtos.UserMealDTO;
-import ua.deti.tqs.backend.entities.Meal;
 import ua.deti.tqs.backend.entities.UserMeal;
 import ua.deti.tqs.backend.services.interfaces.UserMealService;
 import ua.deti.tqs.backend.services.interfaces.WeatherService;
@@ -32,10 +30,8 @@ public class UserMealController {
 
     @PostMapping()
     @Operation(summary = "Create a new userMeal", description = "Adds a new userMeal to the system.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "UserMeal created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body")
-    })
+    @ApiResponse(responseCode = "201", description = "UserMeal created successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request body")
     public ResponseEntity<UserMeal> createUserMeal(@RequestBody UserMeal meal) {
         log.info("Creating a new userMeal");
 
@@ -52,10 +48,8 @@ public class UserMealController {
 
     @GetMapping("{id}")
     @Operation(summary = "Get a userMeal by Id", description = "Fetches a userMeal based on its unique ID.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "UserMeal found"),
-            @ApiResponse(responseCode = "404", description = "UserMeal not found")
-    })
+    @ApiResponse(responseCode = "200", description = "UserMeal found")
+    @ApiResponse(responseCode = "404", description = "UserMeal not found")
     public ResponseEntity<UserMealDTO> getUserMeal(@PathVariable("id") Long id) {
         log.info("Fetching a userMeal by ID: {}", id);
 
@@ -99,7 +93,7 @@ public class UserMealController {
 
         List<UserMeal> userMeals = userMealService.getAllUserMealsByRestaurantId(restaurantId);
 
-        if (userMeals == null ) {
+        if (userMeals.isEmpty() ) {
             log.warn("No UserMeals found for restaurant ID: {}", restaurantId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -114,10 +108,8 @@ public class UserMealController {
 
     @PutMapping()
     @Operation(summary = "Update a userMeal", description = "Updates an existing userMeal's details.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "UserMeal updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body")
-    })
+    @ApiResponse(responseCode = "200", description = "UserMeal updated successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request body")
     public ResponseEntity<UserMeal> updateUserMeal(@RequestBody UserMeal userMeal) {
         log.info("Updating userMeal with ID: {}", userMeal.getId());
 
@@ -134,10 +126,8 @@ public class UserMealController {
 
     @DeleteMapping("{id}")
     @Operation(summary = "Delete a userMeal", description = "Deletes a userMeal by its unique ID.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "UserMeal deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "UserMeal not found")
-    })
+    @ApiResponse(responseCode = "204", description = "UserMeal deleted successfully")
+    @ApiResponse(responseCode = "404", description = "UserMeal not found")
     public ResponseEntity<Void> deleteUserMeal(@PathVariable("id") Long id) {
         log.info("Deleting userMeal with ID: {}", id);
 

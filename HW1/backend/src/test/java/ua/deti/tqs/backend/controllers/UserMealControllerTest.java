@@ -19,6 +19,7 @@ import ua.deti.tqs.backend.entities.utils.WeatherIPMA;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,7 +73,7 @@ class UserMealControllerTest {
 
         Meal meal = new Meal();
         meal.setId(1L);
-        meal.setMeal("meal1");
+        meal.setName("meal1");
         meal.setPrice(BigDecimal.TEN);
         meal.setDate(LocalDateTime.now().plusDays(1));
         meal.setRestaurant(restaurant);
@@ -147,7 +148,7 @@ class UserMealControllerTest {
 
     @Test
     void testGetAllMealsByRestaurantIdNotFound() throws Exception {
-        when(userMealService.getAllUserMealsByRestaurantId(1L)).thenReturn(null);
+        when(userMealService.getAllUserMealsByRestaurantId(1L)).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/api/private/v1/user-meal/all/restaurant/1"))
                 .andExpect(status().isNotFound());

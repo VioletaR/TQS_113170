@@ -11,7 +11,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ua.deti.tqs.backend.dtos.Location;
 import ua.deti.tqs.backend.dtos.Forecast;
-import ua.deti.tqs.backend.entities.UserMeal;
 import ua.deti.tqs.backend.entities.utils.WeatherIPMA;
 import ua.deti.tqs.backend.services.interfaces.WeatherService;
 
