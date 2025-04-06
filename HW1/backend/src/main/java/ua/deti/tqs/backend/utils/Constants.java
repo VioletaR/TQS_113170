@@ -1,9 +1,7 @@
 package ua.deti.tqs.backend.utils;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @Getter
 public final class Constants {
     public static final String API_PATH = "api/";

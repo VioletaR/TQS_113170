@@ -21,7 +21,7 @@ import ua.deti.tqs.backend.utils.Constants;
 @Tag(name = "Users", description = "The Users API")
 @AllArgsConstructor
 @SecurityRequirement(name = "basicAuth")
-public class UserController {
+class UserController {
     private final UserService userService;
 
 

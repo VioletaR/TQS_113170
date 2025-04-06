@@ -125,7 +125,7 @@ class UserControllerIT {
 
     @Test
     void whenGetOtherUserById_thenReturnNotFound() {
-        User user1 = createUser("user1", "pass1", UserRole.USER);
+        createUser("user1", "pass1", UserRole.USER);
         User user2 = createUser("user2", "pass2", UserRole.USER);
 
         given()
@@ -190,7 +190,7 @@ class UserControllerIT {
 
     @Test
     void whenUpdateOtherUser_thenReturnBadRequest() {
-        User user1 = createUser("user1", "pass1", UserRole.USER);
+        createUser("user1", "pass1", UserRole.USER);
         User user2 = createUser("user2", "pass2", UserRole.USER);
         User updateData = new User();
         updateData.setId(user2.getId());
@@ -239,7 +239,7 @@ class UserControllerIT {
 
     @Test
     void whenDeleteOtherUser_thenReturnNotFound() {
-        User user1 = createUser("user1", "pass1", UserRole.USER);
+        createUser("user1", "pass1", UserRole.USER);
         User user2 = createUser("user2", "pass2", UserRole.USER);
 
         given()

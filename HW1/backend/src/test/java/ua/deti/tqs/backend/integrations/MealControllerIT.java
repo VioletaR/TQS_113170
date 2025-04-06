@@ -172,8 +172,8 @@ class MealControllerIT {
     @Test
     void whenGetAllMealsForRestaurant_thenReturnListWithWeather() {
         Restaurant restaurant = createRestaurant("Multi-Meal Restaurant", "Porto");
-        Meal meal1 = createMeal(restaurant, "Meal 1", LocalDateTime.now());
-        Meal meal2 = createMeal(restaurant, "Meal 2", LocalDateTime.now().plusDays(1));
+        createMeal(restaurant, "Meal 1", LocalDateTime.now());
+        createMeal(restaurant, "Meal 2", LocalDateTime.now().plusDays(1));
 
         // Stub weather service for Porto
         when(weatherService.getLocationId("Porto")).thenReturn(Optional.of(1130600));

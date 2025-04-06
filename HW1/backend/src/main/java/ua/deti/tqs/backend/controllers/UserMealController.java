@@ -24,7 +24,7 @@ import java.util.List;
 @Tag(name = "UserMeals", description = "The UserMeals API")
 @AllArgsConstructor
 @SecurityRequirement(name = "basicAuth")
-public class UserMealController {
+class UserMealController {
     private final UserMealService userMealService;
     private final WeatherService weatherService;
 

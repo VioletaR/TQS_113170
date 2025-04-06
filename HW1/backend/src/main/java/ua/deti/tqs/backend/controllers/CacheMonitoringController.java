@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(Constants.API_PATH_V1  + "cache/health")
-public class CacheMonitoringController {
+class CacheMonitoringController {
 
     private final CacheManager cacheManager;
 

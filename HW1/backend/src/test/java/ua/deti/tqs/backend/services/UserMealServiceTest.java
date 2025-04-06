@@ -198,13 +198,13 @@ class UserMealServiceTest {
     @Test
     void getAllUserMealsByUserId_UserNotOwner_ReturnsNull() {
         when(currentUser.getAuthenticatedUserId()).thenReturn(2L);
-        assertEquals(userMealService.getAllUserMealsByUserId(user1.getId()), Collections.emptyList());
+        assertEquals(Collections.emptyList(),userMealService.getAllUserMealsByUserId(user1.getId()));
     }
 
     @Test
     void getAllUserMealsByUserId_NoAuthenticatedUser_ReturnsNull() {
         when(currentUser.getAuthenticatedUserId()).thenReturn(null);
-        assertEquals(userMealService.getAllUserMealsByUserId(user1.getId()), Collections.emptyList());
+        assertEquals(Collections.emptyList(),userMealService.getAllUserMealsByUserId(user1.getId()));
     }
 
     @Test
@@ -217,13 +217,13 @@ class UserMealServiceTest {
     @Test
     void getAllUserMealsByRestaurantId_UserNotStaff_ReturnsNull() {
         when(currentUser.getAuthenticatedUserRole()).thenReturn(UserRole.USER);
-        assertEquals(userMealService.getAllUserMealsByRestaurantId(restaurant1.getId()), Collections.emptyList());
+        assertEquals(Collections.emptyList(),userMealService.getAllUserMealsByRestaurantId(restaurant1.getId()));
     }
 
     @Test
     void getAllUserMealsByRestaurantId_NoAuthenticatedUser_ReturnsNull() {
         when(currentUser.getAuthenticatedUserRole()).thenReturn(null);
-        assertEquals(userMealService.getAllUserMealsByRestaurantId(restaurant1.getId()), Collections.emptyList());
+        assertEquals(Collections.emptyList(),userMealService.getAllUserMealsByRestaurantId(restaurant1.getId()));
     }
 
     @Test

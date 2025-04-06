@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping(Constants.API_PATH_V1 + "restaurant")
 @Tag(name = "Restaurant", description = "The Restaurant API")
 @AllArgsConstructor
-public class RestaurantController {
+class RestaurantController {
     private final RestaurantService restaurantService;
 
     @PostMapping()

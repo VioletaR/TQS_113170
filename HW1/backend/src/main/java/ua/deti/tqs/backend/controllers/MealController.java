@@ -22,7 +22,7 @@ import java.util.List;
 @RequestMapping(Constants.API_PATH_V1 + "meals")
 @Tag(name = "Meals", description = "The Meals API")
 @AllArgsConstructor
-public class MealController {
+class MealController {
     private final MealService mealService;
     private final WeatherService weatherService;
 

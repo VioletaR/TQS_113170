@@ -34,7 +34,7 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void testCreateUserSuccess() throws Exception {
+    void testCreateUserSuccess() throws Exception {
         User user = new User(1L, "user1", "pass1", UserRole.USER);
         when(userService.createUser(any(User.class))).thenReturn(user);
 
@@ -49,7 +49,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void testCreateUserFail() throws Exception {
+    void testCreateUserFail() throws Exception {
         when(userService.createUser(any(User.class))).thenReturn(null);
 
         mockMvc.perform(post("/"+Constants.API_PATH_V1+"users")
@@ -59,7 +59,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void testGetUserByIdSuccess() throws Exception {
+    void testGetUserByIdSuccess() throws Exception {
         User user = new User(1L, "user1", "pass1", UserRole.USER);
         when(userService.getUserById(1L)).thenReturn(user);
 
@@ -69,7 +69,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void testGetUserByIdNotFound() throws Exception {
+    void testGetUserByIdNotFound() throws Exception {
         when(userService.getUserById(999L)).thenReturn(null);
 
         mockMvc.perform(get("/"+Constants.API_PATH_PRIVATE_V1+"users/999"))
@@ -77,7 +77,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void testGetUserByNameSuccess() throws Exception {
+    void testGetUserByNameSuccess() throws Exception {
         User user = new User(1L, "user1", "pass1", UserRole.USER);
         when(userService.getUserByName("user1")).thenReturn(user);
 
@@ -87,7 +87,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void testGetUserByNameNotFound() throws Exception {
+    void testGetUserByNameNotFound() throws Exception {
         when(userService.getUserByName("unknown")).thenReturn(null);
 
         mockMvc.perform(get("/"+Constants.API_PATH_PRIVATE_V1+"users/name/unknown"))
@@ -95,7 +95,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void testUpdateUserSuccess() throws Exception {
+    void testUpdateUserSuccess() throws Exception {
         User user = new User(1L, "updated_user", "pass", UserRole.USER);
         when(userService.updateUser(any(User.class))).thenReturn(user);
 
@@ -107,7 +107,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void testUpdateUserFail() throws Exception {
+    void testUpdateUserFail() throws Exception {
         when(userService.updateUser(any(User.class))).thenReturn(null);
 
         mockMvc.perform(put("/"+Constants.API_PATH_PRIVATE_V1+"users")
@@ -117,7 +117,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void testDeleteUserSuccess() throws Exception {
+    void testDeleteUserSuccess() throws Exception {
         when(userService.deleteUserById(1L)).thenReturn(true);
 
         mockMvc.perform(delete("/"+Constants.API_PATH_PRIVATE_V1+"users/1"))
@@ -125,7 +125,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void testDeleteUserFail() throws Exception {
+    void testDeleteUserFail() throws Exception {
         when(userService.deleteUserById(999L)).thenReturn(false);
 
 

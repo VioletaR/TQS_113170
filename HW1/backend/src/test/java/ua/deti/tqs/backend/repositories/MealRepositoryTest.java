@@ -133,7 +133,7 @@ class MealRepositoryTest {
         Optional<Meal> found = mealRepository.findByIdWithRestaurantLock(meal1.getId());
 
         assertThat(found).isPresent();
-        assertThat(found.get()).isEqualTo(meal1);
+        assertThat(found).contains(meal1);
         assertThat(found.get().getRestaurant()).isEqualTo(restaurant1);
     }
 
