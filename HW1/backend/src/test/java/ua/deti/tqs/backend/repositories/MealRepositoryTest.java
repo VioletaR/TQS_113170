@@ -12,6 +12,7 @@ import ua.deti.tqs.backend.entities.Restaurant;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,19 +53,19 @@ class MealRepositoryTest {
         meal1 = new Meal();
         meal1.setMeal("meal1");
         meal1.setRestaurant(restaurant1);
-        meal1.setDate(LocalDate.now());
+        meal1.setDate(LocalDateTime.now());
         meal1.setPrice(BigDecimal.valueOf(10));
 
         meal2 = new Meal();
         meal2.setMeal("meal2");
         meal2.setRestaurant(restaurant1);
-        meal2.setDate(LocalDate.now());
+        meal2.setDate(LocalDateTime.now());
         meal2.setPrice(BigDecimal.valueOf(20));
 
         meal3 = new Meal();
         meal3.setMeal("meal3");
         meal3.setRestaurant(restaurant2);
-        meal3.setDate(LocalDate.now());
+        meal3.setDate(LocalDateTime.now());
         meal3.setPrice(BigDecimal.valueOf(30));
 
         entityManager.persist(meal1);
@@ -105,7 +106,7 @@ class MealRepositoryTest {
 
     @Test
     void whenFindMealByInvalidMealAndRestaurantAndDate_thenReturnNull() {
-        Meal fromDb = mealRepository.findMealByMealAndRestaurantAndDate("invalid", restaurant1, LocalDate.now()).orElse(null);
+        Meal fromDb = mealRepository.findMealByMealAndRestaurantAndDate("invalid", restaurant1, LocalDateTime.now()).orElse(null);
         assertThat(fromDb).isNull();
     }
 
@@ -132,7 +133,7 @@ class MealRepositoryTest {
         Meal newMeal = new Meal();
         newMeal.setMeal("newMeal");
         newMeal.setRestaurant(restaurant1);
-        newMeal.setDate(LocalDate.now());
+        newMeal.setDate(LocalDateTime.now());
         newMeal.setPrice(BigDecimal.valueOf(25));
 
         Meal created = mealRepository.save(newMeal);

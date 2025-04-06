@@ -8,6 +8,7 @@ import ua.deti.tqs.backend.entities.utils.WeatherIPMA;
 import ua.deti.tqs.backend.services.interfaces.WeatherService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ public class MealDTO {
             try {
                 log.info("Fetching forecast for locationId: {}", locationId);
                 List<Forecast> forecasts = weatherService.getForecastByLocation(locationId);
-                LocalDate mealDate = meal.getDate();
+                LocalDateTime mealDate = meal.getDate();
 
                 log.info("Fetching weather for meal date: {}", mealDate);
                 Optional<WeatherIPMA> weatherOpt = weatherService.getWeatherForDate(forecasts, mealDate);

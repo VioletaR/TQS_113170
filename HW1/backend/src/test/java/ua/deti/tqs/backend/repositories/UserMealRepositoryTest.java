@@ -14,6 +14,7 @@ import ua.deti.tqs.backend.entities.utils.UserRole;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +52,7 @@ class UserMealRepositoryTest {
 
         meal1 = new Meal();
         meal1.setMeal("meal1");
-        meal1.setDate(LocalDate.now());
+        meal1.setDate(LocalDateTime.now());
         meal1.setPrice(BigDecimal.valueOf(10));
         meal1.setRestaurant(restaurant1);
         entityManager.persist(meal1);

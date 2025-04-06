@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 import ua.deti.tqs.backend.authentication.utils.CurrentUser;
 import ua.deti.tqs.backend.entities.Meal;
 import ua.deti.tqs.backend.entities.Restaurant;
@@ -18,6 +19,8 @@ import ua.deti.tqs.backend.repositories.UserRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +32,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class UserMealServiceTest {
 
@@ -71,7 +75,7 @@ public class UserMealServiceTest {
         meal1.setMeal("meal1");
         meal1.setRestaurant(restaurant1);
         meal1.setPrice(BigDecimal.valueOf(10));
-        meal1.setDate(LocalDate.now());
+        meal1.setDate(LocalDateTime.now());
 
         userMeal1 = new UserMeal();
         userMeal1.setId(1L);
@@ -102,14 +106,39 @@ public class UserMealServiceTest {
     }
 
     @Test
-    void createUserMeal_OverlappingBookings_ReturnsNull() {
+    void createUserMeal_OverlappingBookings_Plus_ReturnsNull() {
         when(currentUser.getAuthenticatedUserId()).thenReturn(user1.getId());
         when(mealRepository.findByIdWithRestaurantLock(userMeal1.getMeal().getId())).thenReturn(Optional.of(meal1));
-        when(userMealRepository.countByMealId(userMeal1.getMeal().getId())).thenReturn(5);
+        when(userMealRepository.countByMealId(userMeal1.getMeal().getId())).thenReturn(1);
 
         UserMeal overlappingMeal = new UserMeal();
         Meal overlappingMealEntity = new Meal();
-        overlappingMealEntity.setDate(LocalDate.now().minusDays(29));
+        overlappingMealEntity.setDate(meal1.getDate().plusMinutes(30));
+        overlappingMeal.setMeal(overlappingMealEntity);
+
+        UserMeal overlappingMeal1 = new UserMeal();
+        Meal overlappingMealEntity1 = new Meal();
+        overlappingMealEntity1.setDate(meal1.getDate().minusHours(2));
+        overlappingMeal1.setMeal(overlappingMealEntity1);
+
+        UserMeal overlappingMeal2 = new UserMeal();
+        Meal overlappingMealEntity2 = new Meal();
+        overlappingMealEntity2.setDate(meal1.getDate().plusHours(2));
+        overlappingMeal2.setMeal(overlappingMealEntity2);
+
+        when(userMealRepository.findAllByUserId(anyLong())).thenReturn(Optional.of(List.of(overlappingMeal,overlappingMeal1, overlappingMeal2)));
+        assertNull(userMealService.createUserMeal(userMeal1));
+    }
+
+    @Test
+    void createUserMeal_OverlappingBookings_Minus_ReturnsNull() {
+        when(currentUser.getAuthenticatedUserId()).thenReturn(user1.getId());
+        when(mealRepository.findByIdWithRestaurantLock(userMeal1.getMeal().getId())).thenReturn(Optional.of(meal1));
+        when(userMealRepository.countByMealId(userMeal1.getMeal().getId())).thenReturn(1);
+
+        UserMeal overlappingMeal = new UserMeal();
+        Meal overlappingMealEntity = new Meal();
+        overlappingMealEntity.setDate(meal1.getDate().minusMinutes(30));
         overlappingMeal.setMeal(overlappingMealEntity);
 
         when(userMealRepository.findAllByUserId(anyLong())).thenReturn(Optional.of(List.of(overlappingMeal)));
@@ -121,7 +150,7 @@ public class UserMealServiceTest {
         when(currentUser.getAuthenticatedUserId()).thenReturn(user1.getId());
         when(mealRepository.findByIdWithRestaurantLock(userMeal1.getMeal().getId())).thenReturn(Optional.of(meal1));
         when(userMealRepository.countByMealId(userMeal1.getMeal().getId())).thenReturn(5);
-        when(userMealRepository.findAllByUserId(userMeal1.getUser().getId())).thenReturn(Optional.of(Collections.emptyList()));
+//        when(userMealRepository.findAllByUserId(userMeal1.getUser().getId())).thenReturn(Optional.of(Collections.emptyList()));
         when(userRepository.getReferenceById(userMeal1.getUser().getId())).thenReturn(user1);
         when(userMealRepository.save(any(UserMeal.class))).thenReturn(userMeal1); // TODO SEE THIS
 
@@ -140,7 +169,7 @@ public class UserMealServiceTest {
     @Test
     void getUserMealById_NotExists_ReturnsNull() {
         when(userMealRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertNull(userMealService.getUserMealById(1L));
+        assertNull(userMealService.getUserMealById(userMeal1.getId()));
     }
 
     @Test
@@ -151,15 +180,28 @@ public class UserMealServiceTest {
     }
 
     @Test
+    void getUserMealById_NoAuthenticatedUser_ReturnsNull() {
+        when(userMealRepository.findById(userMeal1.getId())).thenReturn(Optional.of(userMeal1));
+        when(currentUser.getAuthenticatedUserId()).thenReturn(null);
+        assertNull(userMealService.getUserMealById(userMeal1.getId()));
+    }
+
+    @Test
     void getAllUserMealsByUserId_UserIsOwner_ReturnsList() {
         when(currentUser.getAuthenticatedUserId()).thenReturn(user1.getId());
-        when(userMealRepository.findAllByUserId(userMeal1.getId())).thenReturn(Optional.of(List.of(userMeal1)));
+        when(userMealRepository.findAllByUserId(user1.getId())).thenReturn(Optional.of(List.of(userMeal1)));
         assertEquals(List.of(userMeal1), userMealService.getAllUserMealsByUserId(userMeal1.getId()));
     }
 
     @Test
     void getAllUserMealsByUserId_UserNotOwner_ReturnsNull() {
         when(currentUser.getAuthenticatedUserId()).thenReturn(2L);
+        assertNull(userMealService.getAllUserMealsByUserId(user1.getId()));
+    }
+
+    @Test
+    void getAllUserMealsByUserId_NoAuthenticatedUser_ReturnsNull() {
+        when(currentUser.getAuthenticatedUserId()).thenReturn(null);
         assertNull(userMealService.getAllUserMealsByUserId(user1.getId()));
     }
 
@@ -177,8 +219,28 @@ public class UserMealServiceTest {
     }
 
     @Test
+    void getAllUserMealsByRestaurantId_NoAuthenticatedUser_ReturnsNull() {
+        when(currentUser.getAuthenticatedUserRole()).thenReturn(null);
+        assertNull(userMealService.getAllUserMealsByRestaurantId(restaurant1.getId()));
+    }
+
+    @Test
     void updateUserMeal_UserNotStaff_ReturnsNull() {
         when(currentUser.getAuthenticatedUserRole()).thenReturn(UserRole.USER);
+        assertNull(userMealService.updateUserMeal(userMeal1));
+    }
+
+    @Test
+    void updateUserMeal_NoAuthenticatedUser_ReturnsNull() {
+        when(currentUser.getAuthenticatedUserRole()).thenReturn(null);
+        assertNull(userMealService.updateUserMeal(userMeal1));
+    }
+
+    @Test
+    void updateUserMeal_CheckIsNull_ReturnsNull() {
+        when(currentUser.getAuthenticatedUserRole()).thenReturn(UserRole.STAFF);
+        when(userMealRepository.findById(userMeal1.getId())).thenReturn(Optional.of(userMeal1));
+        userMeal1.setIsCheck(null);
         assertNull(userMealService.updateUserMeal(userMeal1));
     }
 
@@ -198,16 +260,6 @@ public class UserMealServiceTest {
         assertTrue(result.getIsCheck());
     }
 
-    @Test
-    void updateUserMeal_NoFieldsChanged_ReturnsNull() {
-        when(currentUser.getAuthenticatedUserRole()).thenReturn(UserRole.STAFF);
-        when(userMealRepository.findById(anyLong())).thenReturn(Optional.of(userMeal1));
-
-        UserMeal updatedUserMeal = new UserMeal();
-        updatedUserMeal.setId(1L);
-
-        assertNull(userMealService.updateUserMeal(updatedUserMeal));
-    }
 
     @Test
     void updateUserMeal_UserMealNotFound_ReturnsNull() {
@@ -216,11 +268,31 @@ public class UserMealServiceTest {
         assertNull(userMealService.updateUserMeal(userMeal1));
     }
 
+
+
     @Test
     void deleteUserMealById_UserNotOwner_ReturnsFalse() {
         when(userMealRepository.existsById(userMeal1.getId())).thenReturn(true);
         when(currentUser.getAuthenticatedUserId()).thenReturn(2L);
         when(userMealRepository.findById(userMeal1.getId())).thenReturn(Optional.of(userMeal1));
+
+        assertFalse(userMealService.deleteUserMealById(userMeal1.getId()));
+    }
+
+    @Test
+    void deleteUserMealById_NoUserAuthenticated_ReturnsFalse() {
+        when(userMealRepository.existsById(userMeal1.getId())).thenReturn(true);
+        when(currentUser.getAuthenticatedUserId()).thenReturn(null);
+        when(userMealRepository.findById(userMeal1.getId())).thenReturn(Optional.of(userMeal1));
+
+        assertFalse(userMealService.deleteUserMealById(userMeal1.getId()));
+    }
+
+
+    @Test
+    void deleteUserMealById_UserMealNotFound_ReturnsFalse() {
+        when(userMealRepository.existsById(userMeal1.getId())).thenReturn(true);
+        when(userMealRepository.findById(userMeal1.getId())).thenReturn(Optional.empty());
 
         assertFalse(userMealService.deleteUserMealById(userMeal1.getId()));
     }
@@ -235,6 +307,7 @@ public class UserMealServiceTest {
         boolean result = userMealService.deleteUserMealById(userMeal1.getId());
         assertThat(result).isTrue();
     }
+
 
     @Test
     void deleteUserMealById_MealNotFound_ReturnsFalse() {

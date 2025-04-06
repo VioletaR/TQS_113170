@@ -15,7 +15,9 @@ import ua.deti.tqs.backend.repositories.UserRepository;
 import ua.deti.tqs.backend.services.interfaces.UserMealService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -42,16 +44,21 @@ public class UserMealServiceImpl implements UserMealService {
         if (bookedSeats >= meal.getRestaurant().getSeats()) {
             return null;
         }
+        LocalDateTime newStart = meal.getDate();
+        LocalDateTime newEnd = newStart.plusHours(1);
 
-        LocalDate mealDate = meal.getDate();
-        LocalDate newStart = mealDate;
-        LocalDate newEnd = mealDate.plusDays(1);
+        List<UserMeal> userMeals = userMealRepository.findAllByUserId(userId)
+                .orElse(Collections.emptyList());
 
-        List<UserMeal> userMeals = userMealRepository.findAllByUserId(userId).orElse(null);
         int overlappingCount = 0;
         for (UserMeal um : userMeals) {
-            LocalDate existingMealDate = um.getMeal().getDate();
-            if (existingMealDate.isBefore(newEnd) && existingMealDate.plusDays(30).isAfter(newStart)) {
+            LocalDateTime existingStart = um.getMeal().getDate();
+            LocalDateTime existingEnd = existingStart.plusHours(1);
+
+            if (
+                    existingStart.isBefore(newEnd) && existingEnd.isAfter(newStart) ||
+                    newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart)
+            ){
                 overlappingCount++;
             }
         }
@@ -88,20 +95,20 @@ public class UserMealServiceImpl implements UserMealService {
 
     @Override
     public List<UserMeal> getAllUserMealsByRestaurantId(Long restaurantId) {
-        if (currentUser.getAuthenticatedUserId() == null ||  !currentUser.getAuthenticatedUserRole().equals(UserRole.STAFF)) return null;
+        if (currentUser.getAuthenticatedUserRole() == null ||  !currentUser.getAuthenticatedUserRole().equals(UserRole.STAFF)) return null;
 
         return userMealRepository.findAllByMeal_RestaurantId(restaurantId).orElse(null);
     }
 
     @Override
     public UserMeal updateUserMeal(UserMeal userMeal) {
-        if (currentUser.getAuthenticatedUserId() == null ||  !currentUser.getAuthenticatedUserRole().equals(UserRole.STAFF)) return null;
+        if (currentUser.getAuthenticatedUserRole() == null ||  !currentUser.getAuthenticatedUserRole().equals(UserRole.STAFF)) return null;
 
         UserMeal existingUserMeal = userMealRepository.findById(userMeal.getId()).orElse(null);
         if (existingUserMeal == null) return null;
 
         int changedFields = 0;
-        if (userMeal.getIsCheck() != null && currentUser.getAuthenticatedUserRole().equals(UserRole.STAFF)) {
+        if (userMeal.getIsCheck() != null) {
             existingUserMeal.setIsCheck(userMeal.getIsCheck());
             changedFields++;
         }

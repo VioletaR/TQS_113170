@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -35,7 +36,7 @@ public class Meal {
 
     @NotNull
     @Column(name = "date", nullable = false)
-    private LocalDate date;
+    private LocalDateTime date;
 
     @Size(max = 255)
     @NotNull

@@ -9,9 +9,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
+import ua.deti.tqs.backend.entities.Meal;
 import ua.deti.tqs.backend.entities.Restaurant;
 import ua.deti.tqs.backend.repositories.RestaurantRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +54,32 @@ class RestaurantServiceTest {
     void whenCreateRestaurantWithInvalidData_thenReturnNull() {
         // Test null name
         Restaurant invalid = new Restaurant();
+        invalid.setName("");
+        invalid.setLocation("location1");
+        invalid.setSeats(10);
+        Restaurant created = restaurantService.createRestaurant(invalid);
+        assertThat(created).isNull();
+        verify(restaurantRepository, never()).save(any());
+
+        // Test null location
+        invalid.setName("name");
+        invalid.setLocation("");
+        created = restaurantService.createRestaurant(invalid);
+        assertThat(created).isNull();
+        verify(restaurantRepository, never()).save(any());
+
+        // Test negative seats
+        invalid.setLocation("location1");
+        invalid.setSeats(-5);
+        created = restaurantService.createRestaurant(invalid);
+        assertThat(created).isNull();
+        verify(restaurantRepository, never()).save(any());
+    }
+
+    @Test
+    void whenCreateRestaurantWithNullData_thenReturnNull() {
+        // Test null name
+        Restaurant invalid = new Restaurant();
         invalid.setName(null);
         invalid.setLocation("location1");
         invalid.setSeats(10);
@@ -66,10 +94,20 @@ class RestaurantServiceTest {
         assertThat(created).isNull();
         verify(restaurantRepository, never()).save(any());
 
-        // Test negative seats
+        // Test null seats
         invalid.setLocation("location1");
-        invalid.setSeats(-5);
+        invalid.setSeats(null);
         created = restaurantService.createRestaurant(invalid);
+
+        assertThat(created).isNull();
+        verify(restaurantRepository, never()).save(any());
+
+    }
+
+    @Test
+    void whenCreateRestaurantWithAnExistingRestaurant_thenReturnNull() {
+        when(restaurantRepository.findByName("restaurant1")).thenReturn(Optional.of(restaurant1));
+        Restaurant created = restaurantService.createRestaurant(restaurant1);
         assertThat(created).isNull();
         verify(restaurantRepository, never()).save(any());
     }
@@ -138,6 +176,37 @@ class RestaurantServiceTest {
         Restaurant invalid = new Restaurant();
         invalid.setId(-1L);
         when(restaurantRepository.findById(-1L)).thenReturn(Optional.empty());
+        Restaurant result = restaurantService.updateRestaurant(invalid);
+        assertThat(result).isNull();
+        verify(restaurantRepository, never()).save(any());
+    }
+
+
+    @Test
+    void whenUpdateRestaurantWithNullData_thenReturnNull() {
+        Restaurant invalid = new Restaurant();
+        invalid.setId(1L);
+        invalid.setName(null);
+        invalid.setLocation(null);
+        invalid.setSeats(null);
+
+        when(restaurantRepository.findById(1L)).thenReturn(Optional.of(restaurant1));
+
+        Restaurant result = restaurantService.updateRestaurant(invalid);
+        assertThat(result).isNull();
+        verify(restaurantRepository, never()).save(any());
+    }
+
+    @Test
+    void whenUpdateRestaurantWithInvalidData_thenReturnNull() {
+        Restaurant invalid = new Restaurant();
+        invalid.setId(1L);
+        invalid.setName("");
+        invalid.setLocation("");
+        invalid.setSeats(0);
+
+        when(restaurantRepository.findById(1L)).thenReturn(Optional.of(restaurant1));
+
         Restaurant result = restaurantService.updateRestaurant(invalid);
         assertThat(result).isNull();
         verify(restaurantRepository, never()).save(any());

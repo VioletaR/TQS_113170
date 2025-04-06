@@ -95,7 +95,7 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
-    public Optional<WeatherIPMA> getWeatherForDate(List<Forecast> forecasts, LocalDate date) {
+    public Optional<WeatherIPMA> getWeatherForDate(List<Forecast> forecasts, LocalDateTime date) {
         log.debug("Fetching closest weather for location on {}", date);
         try {
             if (forecasts == null || forecasts.isEmpty()) {
@@ -151,17 +151,3 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
 }
-
-//public interface UserMealService {
-//    UserMeal createUserMeal(UserMeal userMeal);
-//
-//
-//
-//    List<UserMeal> getAllUserMealsByUserId(Long userId);
-//
-//    UserMeal updateUserMeal(UserMeal userMeal);
-//
-//    boolean deleteUserMealById(Long id);
-//
-//    List<UserMeal> getAllUserMealsByRestaurantId(Long restaurantId);
-//}
