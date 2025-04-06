@@ -84,6 +84,7 @@ public class WeatherServiceImpl implements WeatherService {
         return Collections.emptyList();
     }
 
+
     @Override
     @Cacheable(value = "locationIdCache", key = "#locationName")
     public Optional<Integer> getLocationId(String locationName) {
@@ -97,39 +98,30 @@ public class WeatherServiceImpl implements WeatherService {
     @Override
     public Optional<WeatherIPMA> getWeatherForDate(List<Forecast> forecasts, LocalDateTime date) {
         log.debug("Fetching closest weather for location on {}", date);
-        try {
-            if (forecasts == null || forecasts.isEmpty()) {
-                return Optional.empty();
-            }
-
-            return forecasts.stream()
-                    .min(Comparator.comparing(forecast -> {
-                        LocalDateTime forecastDateTime = LocalDateTime.parse(forecast.forecastDate());
-                        LocalDate forecastDate = forecastDateTime.toLocalDate();
-                        return Math.abs(ChronoUnit.DAYS.between(forecastDate, date));
-                    }))
-                    .map(this::convertToWeatherIPMA);
-        } catch (Exception e) {
-            log.error("Error getting closest weather for location: {}", e.getMessage());
+        if (forecasts == null || forecasts.isEmpty()) {
             return Optional.empty();
         }
+
+        return forecasts.stream()
+                .min(Comparator.comparing(forecast -> {
+                    LocalDateTime forecastDateTime = LocalDateTime.parse(forecast.forecastDate());
+                    LocalDate forecastDate = forecastDateTime.toLocalDate();
+                    return Math.abs(ChronoUnit.DAYS.between(forecastDate, date));
+                }))
+                .map(this::convertToWeatherIPMA);
+
     }
 
     private WeatherIPMA convertToWeatherIPMA(Forecast forecast) {
-        try {
-            return new WeatherIPMA(
-                    forecast.uvIndex(),
-                    forecast.minTemp(),
-                    forecast.maxTemp(),
-                    forecast.windDirection(),
-                    forecast.precipitationProbability(),
-                    forecast.weatherTypeId(),
-                    forecast.precipitationIntensityId()
-            );
-        } catch (Exception e) {
-            log.warn("Failed to convert weather data: {}", e.getMessage());
-            return null;
-        }
+        return new WeatherIPMA(
+                forecast.uvIndex(),
+                forecast.minTemp(),
+                forecast.maxTemp(),
+                forecast.windDirection(),
+                forecast.precipitationProbability(),
+                forecast.weatherTypeId(),
+                forecast.precipitationIntensityId()
+        );
     }
 
     private Location convertToLocation(Map<String, Object> data) {
