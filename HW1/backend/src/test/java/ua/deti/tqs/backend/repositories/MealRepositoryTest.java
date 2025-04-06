@@ -13,6 +13,7 @@ import ua.deti.tqs.backend.entities.Restaurant;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +54,7 @@ class MealRepositoryTest {
         meal1 = new Meal();
         meal1.setMeal("meal1");
         meal1.setRestaurant(restaurant1);
-        meal1.setDate(LocalDateTime.now());
+        meal1.setDate(LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         meal1.setPrice(BigDecimal.valueOf(10));
 
         meal2 = new Meal();
