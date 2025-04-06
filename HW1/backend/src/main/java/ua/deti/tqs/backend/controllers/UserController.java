@@ -17,14 +17,15 @@ import ua.deti.tqs.backend.utils.Constants;
 
 @Slf4j
 @RestController
-@RequestMapping(Constants.API_PATH_PRIVATE_V1 + "users")
+@RequestMapping(Constants.API_PATH)
 @Tag(name = "Users", description = "The Users API")
 @AllArgsConstructor
 @SecurityRequirement(name = "basicAuth")
 public class UserController {
     private final UserService userService;
 
-    @PostMapping()
+
+    @PostMapping("v1/users")
     @Operation(summary = "Create a new user", description = "Adds a new user to the system.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "User created successfully"),
@@ -44,7 +45,7 @@ public class UserController {
         return new ResponseEntity<>(newUser, status);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("private/v1/users/{id}")
     @Operation(summary = "Get a user by Id", description = "Fetches a user based on its unique ID.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User found"),
@@ -64,7 +65,7 @@ public class UserController {
         return new ResponseEntity<>(user, status);
     }
 
-    @GetMapping("name/{name}")
+    @GetMapping("private/v1/users/name/{name}")
     @Operation(summary = "Get a user by name", description = "Fetches a user based on its name.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User found"),
@@ -84,7 +85,7 @@ public class UserController {
         return new ResponseEntity<>(user, status);
     }
 
-    @PutMapping()
+    @PutMapping("private/v1/users")
     @Operation(summary = "Update a user", description = "Updates an existing user's details.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User updated successfully"),
@@ -104,7 +105,7 @@ public class UserController {
         return new ResponseEntity<>(updateUser, status);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("private/v1/users/{id}")
     @Operation(summary = "Delete a user", description = "Deletes a user by its unique ID.")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "User deleted successfully"),

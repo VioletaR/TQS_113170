@@ -99,6 +99,10 @@ public class UserMealController {
 
         List<UserMeal> userMeals = userMealService.getAllUserMealsByRestaurantId(restaurantId);
 
+        if (userMeals == null ) {
+            log.warn("No UserMeals found for restaurant ID: {}", restaurantId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
 
         List<UserMealDTO> userMealDTOs = userMeals.stream()
                 .map(userMeal -> UserMealDTO.fromUserMeal(userMeal,weatherService))

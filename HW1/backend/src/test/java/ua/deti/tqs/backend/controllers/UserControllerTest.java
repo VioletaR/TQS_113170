@@ -38,7 +38,7 @@ public class UserControllerTest {
         User user = new User(1L, "user1", "pass1", UserRole.USER);
         when(userService.createUser(any(User.class))).thenReturn(user);
 
-        mockMvc.perform(post("/"+Constants.API_PATH_PRIVATE_V1+"users")
+        mockMvc.perform(post("/"+Constants.API_PATH_V1+"users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isCreated())
@@ -52,7 +52,7 @@ public class UserControllerTest {
     public void testCreateUserFail() throws Exception {
         when(userService.createUser(any(User.class))).thenReturn(null);
 
-        mockMvc.perform(post("/"+Constants.API_PATH_PRIVATE_V1+"users")
+        mockMvc.perform(post("/"+Constants.API_PATH_V1+"users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new User())))
                 .andExpect(status().isBadRequest());

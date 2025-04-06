@@ -74,7 +74,7 @@ public class UserControllerIT {
                 .contentType(ContentType.JSON)
                 .body(user)
                 .when()
-                .post(Constants.API_PATH_PRIVATE_V1 + "users")
+                .post(Constants.API_PATH_V1 + "users")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .body("username", equalTo("testuser"))
@@ -95,7 +95,7 @@ public class UserControllerIT {
                 .contentType(ContentType.JSON)
                 .body(duplicate)
                 .when()
-                .post(Constants.API_PATH_PRIVATE_V1 + "users")
+                .post(Constants.API_PATH_V1 + "users")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -110,7 +110,7 @@ public class UserControllerIT {
                 .contentType(ContentType.JSON)
                 .body(invalidUser)
                 .when()
-                .post(Constants.API_PATH_PRIVATE_V1 + "users")
+                .post(Constants.API_PATH_V1 + "users")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }

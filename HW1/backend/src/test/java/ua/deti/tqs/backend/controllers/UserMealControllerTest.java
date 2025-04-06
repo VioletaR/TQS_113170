@@ -148,6 +148,14 @@ public class UserMealControllerTest {
     }
 
     @Test
+    void testGetAllMealsByRestaurantIdNotFound() throws Exception {
+        when(userMealService.getAllUserMealsByRestaurantId(1L)).thenReturn(null);
+
+        mockMvc.perform(get("/api/private/v1/user-meal/all/restaurant/1"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void testUpdateUserMeal() throws Exception {
         when(userMealService.updateUserMeal(any())).thenReturn(userMeal);
 
