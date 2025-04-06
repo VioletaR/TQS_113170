@@ -82,6 +82,7 @@ public class UserMealServiceTest {
         userMeal1.setUser(user1);
         userMeal1.setMeal(meal1);
         userMeal1.setIsCheck(false);
+
     }
 
     @Test
@@ -147,16 +148,19 @@ public class UserMealServiceTest {
 
     @Test
     void createUserMeal_Success_ReturnsUserMeal() {
+        userMeal1.setIsCheck(true);
+        userMeal1.setCode("abc");
+
         when(currentUser.getAuthenticatedUserId()).thenReturn(user1.getId());
         when(mealRepository.findByIdWithRestaurantLock(userMeal1.getMeal().getId())).thenReturn(Optional.of(meal1));
         when(userMealRepository.countByMealId(userMeal1.getMeal().getId())).thenReturn(5);
-//        when(userMealRepository.findAllByUserId(userMeal1.getUser().getId())).thenReturn(Optional.of(Collections.emptyList()));
         when(userRepository.getReferenceById(userMeal1.getUser().getId())).thenReturn(user1);
-        when(userMealRepository.save(any(UserMeal.class))).thenReturn(userMeal1); // TODO SEE THIS
+        when(userMealRepository.save(any(UserMeal.class))).thenReturn(userMeal1);
 
         UserMeal result = userMealService.createUserMeal(userMeal1);
         assertNotNull(result);
         assertEquals(userMeal1.getId(), result.getId());
+
     }
 
     @Test

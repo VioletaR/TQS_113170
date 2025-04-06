@@ -25,6 +25,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static net.bytebuddy.matcher.ElementMatchers.is;
+import static org.assertj.core.api.AssertionsForClassTypes.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -100,6 +102,7 @@ public class UserMealControllerTest {
                         .content(objectMapper.writeValueAsString(userMeal)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(userMeal.getId()));
+
     }
 
     @Test

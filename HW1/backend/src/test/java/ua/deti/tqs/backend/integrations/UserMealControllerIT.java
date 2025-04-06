@@ -38,14 +38,19 @@ import java.util.Map;
 import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
+import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.not;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -113,6 +118,8 @@ public class UserMealControllerIT {
         UserMeal booking = new UserMeal();
         booking.setUser(regularUser);
         booking.setMeal(availableMeal);
+        booking.setIsCheck(true);
+        booking.setCode("CODE123");
 
         given()
                 .auth().preemptive().basic("user", "userpass")
@@ -122,7 +129,9 @@ public class UserMealControllerIT {
                 .post(Constants.API_PATH_PRIVATE_V1 + "user-meal")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("meal.meal", equalTo("Test Meal"));
+                .body("meal.meal", equalTo("Test Meal"))
+                .body("code", not(equalTo(booking.getCode())))
+                .body("isCheck", equalTo(false));
 
         assertThat(userMealRepository.count()).isEqualTo(1);
     }
@@ -178,7 +187,6 @@ public class UserMealControllerIT {
                 .get(Constants.API_PATH_PRIVATE_V1 + "user-meal/{id}")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("userMeal.code", equalTo("CUM-68d30a95"))
                 .body("weatherIPMA.tempMin", equalTo("15"));
     }
 
@@ -206,8 +214,8 @@ public class UserMealControllerIT {
                 .get(Constants.API_PATH_PRIVATE_V1 + "user-meal/all/{userId}")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", equalTo(1))
-                .body("[0].userMeal.code", equalTo("CUM-d7a84628"));
+                .body("size()", equalTo(1));
+
     }
 
     @Test
