@@ -15,6 +15,7 @@ export function RestaurantSearch({ onSearch }: RestaurantSearchProps) {
       </CardHeader>
       <CardContent>
         <Input
+          data-testid="restaurant-search-input"
           type="text"
           placeholder="Search by name or location..."
           onChange={(e) => onSearch(e.target.value)}

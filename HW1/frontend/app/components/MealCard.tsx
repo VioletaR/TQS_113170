@@ -12,6 +12,7 @@ import { getWeatherIcon, getWeatherDescription } from "@/lib/utils/weather";
 import { getMealType } from "../../lib/utils/meal";
 import Image from "next/image";
 import { Building2, Clock } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface MealCardProps {
   meal: MealDTO;
@@ -20,10 +21,12 @@ interface MealCardProps {
 export function MealCard({ meal }: MealCardProps) {
   const router = useRouter();
   const { isAuthenticated, user } = useAuth();
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState<boolean>(false);
   const [reservationCode, setReservationCode] = useState<string>("");
   const [isAlreadyBooked, setIsAlreadyBooked] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const checkExistingBooking = async () => {
@@ -37,17 +40,25 @@ export function MealCard({ meal }: MealCardProps) {
         setIsAlreadyBooked(hasBooked);
       } catch (error) {
         console.error("Failed to check existing bookings:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to check your existing bookings. Please try again.",
+        });
       }
     };
 
     checkExistingBooking();
-  }, [isAuthenticated, user, meal.meal.id]);
+  }, [isAuthenticated, user, meal.meal.id, toast]);
 
   const handleBooking = async () => {
     if (!isAuthenticated || !user) {
       router.push("/login");
       return;
     }
+
+    setIsLoading(true);
+    setError(null);
 
     try {
       const response = await userMealService.create({
@@ -59,8 +70,20 @@ export function MealCard({ meal }: MealCardProps) {
       setReservationCode(response.code);
       setBookingSuccess(true);
       setIsAlreadyBooked(true);
+      toast({
+        title: "Success",
+        description: "Your reservation has been confirmed!",
+      });
     } catch (error) {
-      console.error("Failed to book meal:", error);
+      console.error("Unable to book the meal:", error);
+      setError("Unable to book the meal.");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Unable to book the meal.",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -131,6 +154,12 @@ export function MealCard({ meal }: MealCardProps) {
           </div>
         )}
 
+        {error && (
+          <div className="p-3 bg-destructive/10 rounded-lg text-destructive text-sm" data-testid="error-message">
+            {error}
+          </div>
+        )}
+
         {bookingSuccess ? (
           <div className="space-y-3">
             <div className="p-3 bg-primary/10 rounded-lg">
@@ -164,10 +193,10 @@ export function MealCard({ meal }: MealCardProps) {
           <Button
             className="w-full bg-primary hover:bg-primary/90"
             onClick={handleBooking}
-            disabled={isAlreadyBooked}
+            disabled={isAlreadyBooked || isLoading}
             data-testid="book-button"
           >
-            {isAlreadyBooked ? "Already Booked" : "Book Now"}
+            {isLoading ? "Booking..." : (isAlreadyBooked ? "Already Booked" : "Book Now")}
           </Button>
         )}
       </CardContent>
