@@ -1,0 +1,19 @@
+FROM oven/bun:alpine AS base
+
+FROM node:21-bookworm AS node_with_bun
+RUN npm install -g bun
+
+# Install dependencies
+FROM node_with_bun AS builder
+WORKDIR /frontend
+
+COPY . .
+RUN bun install --frozen-lockfile
+RUN bun run build
+
+ENV NODE_ENV production
+
+EXPOSE 3000
+ENV PORT 3000
+
+CMD ["bun", "--bun", "run", "start"]

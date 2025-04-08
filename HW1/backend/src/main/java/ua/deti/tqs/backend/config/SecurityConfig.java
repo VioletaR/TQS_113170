@@ -36,7 +36,6 @@ public class SecurityConfig {
                         .requestMatchers("/" + Constants.API_PATH_PRIVATE_V1 +"**").authenticated()
                         .anyRequest().permitAll()
                 )
-                .httpBasic(withDefaults())
                 .addFilterBefore(authMiddleware, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
