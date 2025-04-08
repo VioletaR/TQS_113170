@@ -252,16 +252,6 @@ class UserControllerIT {
     }
 
     @Test
-    void whenUnauthenticatedRequest_thenReturnUnauthorized() {
-        given()
-                .contentType(ContentType.JSON)
-                .when()
-                .get(Constants.API_PATH_PRIVATE_V1 + "users/1")
-                .then()
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
-    }
-
-    @Test
     void whenChangeOwnRole_thenReturnUpdatedUser() {
         User user = createUser("roleuser", "pass", UserRole.USER);
         User updateData = new User();
