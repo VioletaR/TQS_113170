@@ -40,15 +40,15 @@ INSERT INTO meal (restaurant_id, name, price, meal_date) VALUES
 
 INSERT INTO user_meal (user_id, meal_id, is_check, code) VALUES
                                                              (1, 1, TRUE, 'CUM-12345678'),
-                                                             (1, 3, FALSE, 'CUM-12345678'),
-                                                             (1, 5, TRUE, 'CUM-12345678'),
-                                                             (1, 7, FALSE, 'CUM-12345678'),
-                                                             (1, 9, TRUE, 'CUM-12345678'),
-                                                             (2, 2, FALSE, 'CUM-12345678'),
-                                                             (2, 4, TRUE, 'CUM-12345678'),
-                                                             (2, 6, FALSE, 'CUM-12345678'),
-                                                             (2, 8, TRUE, 'CUM-12345678'),
-                                                             (2, 10, FALSE, 'CUM-12345678'),
-                                                             (1, 20, TRUE, 'CUM-12345678'),
-                                                             (2, 20, FALSE, 'CUM-12345678'),
-                                                             (3, 20, TRUE, 'CUM-12345678');
+                                                             (1, 3, FALSE, 'CUM-a2b45678'),
+                                                             (1, 5, TRUE, 'CUM-12cd5678'),
+                                                             (1, 7, FALSE, 'CUM-1qw45678'),
+                                                             (1, 9, TRUE, 'CUM-12io5678'),
+                                                             (2, 2, FALSE, 'CUM-98345678'),
+                                                             (2, 4, TRUE, 'CUM-1po45678'),
+                                                             (2, 6, FALSE, 'CUM-12qw5678'),
+                                                             (2, 8, TRUE, 'CUM-ae345678'),
+                                                             (2, 10, FALSE, 'CUM-d23d5f78'),
+                                                             (1, 20, TRUE, 'CUM-d2d4f6a8'),
+                                                             (2, 20, FALSE, 'CUM-92lf5678'),
+                                                             (3, 20, TRUE, 'CUM-p23uiy78');
