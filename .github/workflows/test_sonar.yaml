@@ -3,7 +3,7 @@ name: Tests & Sonar analysis
 on:
   push:
     paths:
-      - "HW1/**"
+      - "HW1-113170/**"
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
