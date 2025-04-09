@@ -3,14 +3,14 @@ name: Tests & Sonar analysis
 on:
   push:
     paths:
-      - "HW1/**"
+      - "HW1-113170/**"
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 defaults:
   run:
-    working-directory: ./HW1
+    working-directory: ./HW1-113170
 
 jobs:
   build:
@@ -39,16 +39,16 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Up containers
         run: docker compose -f compose.yaml up -d --build
-        working-directory: ./HW1
+        working-directory: ./HW1-113170
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=VioletaR_TQS_113170_2384ab07-c388-491f-b1c1-809e25876f0e -Dsonar.projectName='TQS_113170'
-        working-directory: ./HW1/backend
+        working-directory: ./HW1-113170/backend
 
       - name: Down containers
         run: |
           docker compose -f compose.yaml down --volumes
           docker builder prune -a -f
-        working-directory: ./HW1
+        working-directory: ./HW1-113170
