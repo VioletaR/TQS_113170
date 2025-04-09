@@ -55,25 +55,7 @@ class WeatherServiceTest {
                 ArgumentMatchers.<ParameterizedTypeReference<List<Map<String, Object>>>>any())
         ).thenReturn(response);
 
-//        List<Location> locations = weatherService.getAllLocations();
     }
-
-
-//    @Test
-//    void testGetForecastById_success() {
-//        int locationId = 1010500;
-//        Forecast forecast1 = new Forecast("10", "10", "10", 1, 2, 1010500, "10%", "2025-04-01T00:00:00", "N", 1, "2025" + "-03-31T12:00:00", 24);
-//        Forecast forecast2 = new Forecast("10", "10", "10", 2, 3, 1010500, "20%", "2025-04-01T00:00:00", "S", 2, "2025" + "-03-31T12:00:00", 12);
-//
-//        List<Forecast> mockForecasts = Arrays.asList(forecast1, forecast2);
-//        ResponseEntity<List<Forecast>> mockResponse = ResponseEntity.ok(mockForecasts);
-//        when(restTemplate.exchange(eq("http://api.ipma.pt/public-data/forecast/aggregate/1010500.json"), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class))).thenReturn(mockResponse);
-//        List<Forecast> result = weatherService.getForecastByLocation(locationId);
-//
-//        assertThat(result).hasSize(1)
-//                .allMatch(f -> f.periodId() == 24)
-//                .containsExactly(forecast1);
-//    }
 
     @Test
     void testGetForecastById_apiError() {

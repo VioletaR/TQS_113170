@@ -13,12 +13,11 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
-public class BookTest {
+public class BookSteps {
     private WebDriver driver;
     private WebDriverWait wait;
 
