@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { userService } from "@/lib/services/user.service";
 import { useAuth } from "../contexts/AuthContext";
-import { User } from "lucide-react";
 
 export function LoginForm() {
   const [username, setUsername] = useState("");
@@ -37,6 +36,7 @@ export function LoginForm() {
       } else {
         setError("Invalid username or password");
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setError("Invalid username or password");
     } finally {

@@ -13,10 +13,9 @@ export function Navigation() {
   const isRoot = pathname === "/";
   const isLogin = pathname === "/login";
   const isSignup = pathname === "/signup";
-  const isWelcomeBack = pathname === "/welcome-back";
 
   // Hide navigation on these pages
-  if (isRoot || isLogin || isSignup || isWelcomeBack) {
+  if (isRoot || isLogin || isSignup ) {
     return null;
   }
 

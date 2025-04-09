@@ -9,9 +9,9 @@ import { userMealService } from "@/lib/services/user-meal.service";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
 import { getWeatherIcon, getWeatherDescription } from "@/lib/utils/weather";
-import { getMealType } from "../../lib/utils/meal";
+import { getMealType } from "@/lib/utils/meal";
 import Image from "next/image";
-import { Building2, Clock } from "lucide-react";
+import { Building2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface MealCardProps {
@@ -87,14 +87,6 @@ export function MealCard({ meal }: MealCardProps) {
     }
   };
 
-  const formattedDate = new Date(meal.meal.date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
-  });
 
   return (
     <Card className="w-full overflow-hidden transition-all duration-300 hover:shadow-lg border-primary/20" data-testid={`meal-card-${meal.meal.id}`}>

@@ -5,7 +5,6 @@ import { RestaurantSearch } from "../components/RestaurantSearch";
 import { RestaurantCard } from "../components/RestaurantCard";
 import { restaurantService } from "@/lib/services/restaurant.service";
 import { Restaurant } from "@/lib/services/api";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
