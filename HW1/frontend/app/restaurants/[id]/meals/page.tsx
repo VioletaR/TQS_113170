@@ -22,7 +22,6 @@ export default function RestaurantMealsPage() {
   const { user } = useAuth();
   const [meals, setMeals] = useState<MealDTO[]>([]);
   const [reservations, setReservations] = useState<UserMealDTO[]>([]);
-  const [filteredReservations, setFilteredReservations] = useState<UserMealDTO[]>([]);
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [groupedMeals, setGroupedMeals] = useState<Record<string, MealDTO[]>>({});
@@ -30,9 +29,7 @@ export default function RestaurantMealsPage() {
   const [expandedDates, setExpandedDates] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    loadRestaurantAndData();
-  }, [restaurantId]);
+
 
   useEffect(() => {
     if (meals.length > 0) {
@@ -64,7 +61,6 @@ export default function RestaurantMealsPage() {
             reservation.userMeal.code.toLowerCase().includes(searchQuery.toLowerCase())
           )
         : reservations;
-      setFilteredReservations(filtered);
 
       const grouped = filtered.reduce((acc, reservation) => {
         const date = new Date(reservation.userMeal.meal.date);
@@ -98,6 +94,10 @@ export default function RestaurantMealsPage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadRestaurantAndData();
+  }, [restaurantId]);
 
   const handleCheckReservation = async (userMealId: number) => {
     try {

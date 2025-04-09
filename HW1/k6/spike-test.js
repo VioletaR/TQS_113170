@@ -1,211 +1,102 @@
 import http from 'k6/http';
-import { check, group } from 'k6';
-import { btoa } from 'k6/encoding';
+import { check, sleep } from 'k6';
+import { Trend, Rate } from 'k6/metrics';
 
-const BASE_URL = 'http://localhost:8080';
-const CREDENTIALS = 'teste:teste';
-const authHeader = {
-    'Authorization': `Basic ${btoa(CREDENTIALS)}`,
-    'Content-Type': 'application/json'
-};
+
+const restaurantResponseTime = new Trend('restaurant_response_time');
+const errorRate = new Rate('error_rate');
 
 export const options = {
-    vus: 1,
-    iterations: 1,
+    stages: [
+        { duration: '30s', target: 50 },
+        { duration: '15s', target: 200 },
+        { duration: '30s', target: 100 },
+        { duration: '15s', target: 50 },
+        { duration: '30s', target: 0 }
+    ],
     thresholds: {
-        checks: ['rate > 0.8']
-    }
+
+        'http_req_duration': ['p(95)<500', 'p(99)<1000'],
+        'http_req_failed': ['rate<0.01'],
+        'http_reqs': ['count>1000'],
+
+        'restaurant_response_time': ['p(95)<500', 'p(99)<1000'],
+
+        'error_rate': ['rate<0.01'],
+    },
 };
 
-export default function () {
-    group('Restaurant API Tests', () => {
-        // Create Restaurant
-        const restaurantPayload = {
-            name: `Restaurant_${Date.now()}`,
-            location: "Test Location",
-            seats: 50
-        };
+export function setup() {
+    console.log("Starting setup phase...");
 
-        const createRes = http.post(`${BASE_URL}/api/v1/restaurant`, JSON.stringify(restaurantPayload), {
-            headers: { 'Content-Type': 'application/json' }
-        });
 
-        check(createRes, {
-            'Create Restaurant - 201 Created': (r) => r.status === 201
-        });
-
-        const restaurantId = createRes.json('id');
-
-        // Get Restaurant by ID
-        const getByIdRes = http.get(`${BASE_URL}/api/v1/restaurant/${restaurantId}`);
-        check(getByIdRes, {
-            'Get Restaurant by ID - 200 OK': (r) => r.status === 200
-        });
-
-        // Update Restaurant
-        const updatePayload = { ...restaurantPayload, seats: 60 };
-        const updateRes = http.put(`${BASE_URL}/api/v1/restaurant`, JSON.stringify(updatePayload), {
-            headers: { 'Content-Type': 'application/json' }
-        });
-        check(updateRes, {
-            'Update Restaurant - 200 OK': (r) => r.status === 200
-        });
-
-        // Delete Restaurant
-        const deleteRes = http.del(`${BASE_URL}/api/v1/restaurant/${restaurantId}`);
-        check(deleteRes, {
-            'Delete Restaurant - 204 No Content': (r) => r.status === 204
-        });
+    const restaurantsRes = http.get('http://backend:8080/api/v1/restaurant/all');
+    const restaurantsCheck = check(restaurantsRes, {
+        'restaurants fetched': (r) => r.status === 200,
+        'restaurants response time': (r) => r.timings.duration < 1000,
+        'restaurants response has data': (r) => r.json().length > 0,
     });
 
-    group('Meal API Tests', () => {
-        // First create a restaurant
-        const restaurantRes = http.post(`${BASE_URL}/api/v1/restaurant`, JSON.stringify({
-            name: `MealTestRestaurant_${Date.now()}`,
-            location: "Meal Test Location",
-            seats: 30
-        }), { headers: { 'Content-Type': 'application/json' } });
-        const restaurantId = restaurantRes.json('id');
+    if (!restaurantsCheck) {
+        throw new Error('Failed to fetch restaurants during setup');
+    }
 
-        // Create Meal
-        const mealPayload = {
-            restaurant: { id: restaurantId },
-            price: 15.99,
-            date: new Date().toISOString(),
-            name: `Meal_${Date.now()}`
-        };
+    const restaurants = restaurantsRes.json();
+    const restaurantIds = restaurants.map((r) => r.id).filter(id => id !== undefined && id !== null);
+    console.log(`Found ${restaurantIds.length} valid restaurant IDs`);
 
-        const createMealRes = http.post(`${BASE_URL}/api/v1/meals`, JSON.stringify(mealPayload), {
-            headers: { 'Content-Type': 'application/json' }
-        });
-        check(createMealRes, {
-            'Create Meal - 201 Created': (r) => r.status === 201
-        });
 
-        const mealId = createMealRes.json('id');
+    if (restaurantIds.length === 0) {
+        throw new Error('No valid restaurant IDs found during setup');
+    }
 
-        // Get Meal by ID
-        const getMealRes = http.get(`${BASE_URL}/api/v1/meals/${mealId}`);
-        check(getMealRes, {
-            'Get Meal by ID - 200 OK': (r) => r.status === 200
-        });
+    console.log("Setup completed successfully");
+    return { restaurantIds };
+}
 
-        // Cleanup
-        http.del(`${BASE_URL}/api/v1/meals/${mealId}`);
-        http.del(`${BASE_URL}/api/v1/restaurant/${restaurantId}`);
-    });
+function randomItem(array) {
+    if (!array || array.length === 0) {
+        throw new Error('Cannot get random item from empty array');
+    }
+    return array[Math.floor(Math.random() * array.length)];
+}
 
-    group('User API Tests', () => {
-        // Create User
-        const userPayload = {
-            username: `user_${Date.now()}`,
-            password: "testpassword",
-            role: "USER"
-        };
 
-        const createRes = http.post(`${BASE_URL}/api/v1/users`, JSON.stringify(userPayload), {
-            headers: authHeader
-        });
-        check(createRes, {
-            'Create User - 201 Created': (r) => r.status === 201
-        });
+export default function (data) {
+    const { restaurantIds } = data;
 
-        const userId = createRes.json('id');
+    if (Math.random() < 0.5) {
+        if (Math.random() < 0.5) {
+            const res = http.get('http://backend:8080/api/v1/restaurant/all');
+            restaurantResponseTime.add(res.timings.duration);
+            const checkResult = check(res, {
+                'get all restaurants status 200': (r) => r.status === 200,
+                'get all restaurants response time': (r) => r.timings.duration < 1000,
+                'get all restaurants has data': (r) => r.json().length > 0,
+                'get all restaurants valid response': (r) => {
+                    const data = r.json();
+                    return Array.isArray(data) && data.every(item =>
+                        item.id && item.name && typeof item.id === 'number' && typeof item.name === 'string'
+                    );
+                },
+            });
+            errorRate.add(!checkResult);
+        } else {
+            const id = randomItem(restaurantIds);
+            console.log("RESTAURANT ID: ", id);
+            const res = http.get(`http://backend:8080/api/v1/restaurant/${id}`);
+            restaurantResponseTime.add(res.timings.duration);
+            const checkResult = check(res, {
+                'get restaurant by id status 200': (r) => r.status === 200,
+                'get restaurant by id response time': (r) => r.timings.duration < 1000,
+                'get restaurant by id has data': (r) => {
+                    const data = r.json();
+                    return data && data.id === id;
+                },
+            });
+            errorRate.add(!checkResult);
+        }
+    }
 
-        // Get User by ID
-        const getUserRes = http.get(`${BASE_URL}/api/private/v1/users/${userId}`, {
-            headers: authHeader
-        });
-        check(getUserRes, {
-            'Get User by ID - 200 OK': (r) => r.status === 200
-        });
-
-        // Update User
-        const updatePayload = { ...userPayload, role: "STAFF" };
-        const updateRes = http.put(`${BASE_URL}/api/private/v1/users`, JSON.stringify(updatePayload), {
-            headers: authHeader
-        });
-        check(updateRes, {
-            'Update User - 200 OK': (r) => r.status === 200
-        });
-
-        // Delete User
-        const deleteRes = http.del(`${BASE_URL}/api/private/v1/users/${userId}`, null, {
-            headers: authHeader
-        });
-        check(deleteRes, {
-            'Delete User - 204 No Content': (r) => r.status === 204
-        });
-    });
-
-    group('UserMeal API Tests', () => {
-        // Create dependencies
-        const restaurantRes = http.post(`${BASE_URL}/api/v1/restaurant`, JSON.stringify({
-            name: `UMRestaurant_${Date.now()}`,
-            location: "UM Test Loc",
-            seats: 40
-        }), { headers: { 'Content-Type': 'application/json' } });
-        const restaurantId = restaurantRes.json('id');
-
-        const mealRes = http.post(`${BASE_URL}/api/v1/meals`, JSON.stringify({
-            restaurant: { id: restaurantId },
-            price: 12.99,
-            date: new Date().toISOString(),
-            name: `UM_Meal_${Date.now()}`
-        }), { headers: { 'Content-Type': 'application/json' } });
-        const mealId = mealRes.json('id');
-
-        const userRes = http.post(`${BASE_URL}/api/v1/users`, JSON.stringify({
-            username: `um_user_${Date.now()}`,
-            password: "testpass",
-            role: "USER"
-        }), { headers: authHeader });
-        const userId = userRes.json('id');
-
-        // Create UserMeal
-        const userMealPayload = {
-            user: { id: userId },
-            meal: { id: mealId },
-            isCheck: false,
-            code: "TEST123"
-        };
-
-        const createUMRes = http.post(`${BASE_URL}/api/private/v1/user-meal`, JSON.stringify(userMealPayload), {
-            headers: authHeader
-        });
-        check(createUMRes, {
-            'Create UserMeal - 201 Created': (r) => r.status === 201
-        });
-
-        const userMealId = createUMRes.json('id');
-
-        // Get UserMeal by ID
-        const getUMRes = http.get(`${BASE_URL}/api/private/v1/user-meal/${userMealId}`, {
-            headers: authHeader
-        });
-        check(getUMRes, {
-            'Get UserMeal by ID - 200 OK': (r) => r.status === 200
-        });
-
-        // Cleanup
-        http.del(`${BASE_URL}/api/private/v1/user-meal/${userMealId}`, null, { headers: authHeader });
-        http.del(`${BASE_URL}/api/v1/meals/${mealId}`);
-        http.del(`${BASE_URL}/api/v1/restaurant/${restaurantId}`);
-        http.del(`${BASE_URL}/api/private/v1/users/${userId}`, null, { headers: authHeader });
-    });
-
-    // Additional tests
-    group('Miscellaneous Tests', () => {
-        // Test cache health endpoint
-        const cacheHealthRes = http.get(`${BASE_URL}/api/v1/cache/health`);
-        check(cacheHealthRes, {
-            'Cache Health Check - 200 OK': (r) => r.status === 200
-        });
-
-        // Test get all restaurants
-        const allRestaurantsRes = http.get(`${BASE_URL}/api/v1/restaurant/all`);
-        check(allRestaurantsRes, {
-            'Get All Restaurants - 200 OK': (r) => r.status === 200
-        });
-    });
+    sleep(1);
 }

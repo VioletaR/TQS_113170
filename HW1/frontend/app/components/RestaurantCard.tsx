@@ -8,7 +8,7 @@ import {  Users } from "lucide-react";
 
 interface RestaurantCardProps {
   restaurant: {
-    id: number;
+    id?: number | undefined;
     name: string;
     location: string;
     seats: number;

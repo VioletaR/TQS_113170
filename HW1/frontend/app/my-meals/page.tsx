@@ -22,13 +22,6 @@ export default function MyMealsPage() {
   const [groupedMeals, setGroupedMeals] = useState<Record<string, UserMealDTO[]>>({});
   const [expandedDates, setExpandedDates] = useState<Record<string, boolean>>({});
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/");
-      return;
-    }
-    loadMyMeals();
-  }, [isAuthenticated, router]);
 
   useEffect(() => {
     if (meals.length > 0) {
@@ -52,6 +45,7 @@ export default function MyMealsPage() {
     }
   }, [meals]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const loadMyMeals = async () => {
     if (!user?.id) return;
     try {
@@ -66,6 +60,15 @@ export default function MyMealsPage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/");
+      return;
+    }
+    loadMyMeals();
+  }, [isAuthenticated, router]);
+
 
   const handleCancelReservation = async (userMealId: number) => {
     if (!confirm("Are you sure you want to cancel this reservation?")) {

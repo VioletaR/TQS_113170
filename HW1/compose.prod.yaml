@@ -44,27 +44,29 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.prod
+      dockerfile: "Dockerfile"
     volumes:
       - ./frontend:/frontend
       - node_modules:/frontend/node_modules
     networks:
       - frontend
+    ports:
+      - "3000:3000"
 
   proxy:
     image: nginx:latest
-    depends_on:
-      backend:
-        condition: service_healthy
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     networks:
       - backend
       - frontend
     restart: unless-stopped
     volumes:
       - ./proxy/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      backend:
+        condition: service_healthy
 
   prometheus:
     image: prom/prometheus:latest
