@@ -33,31 +33,6 @@ class WeatherServiceTest {
     }
 
     @Test
-    void testGetAllLocations_success() {
-        Map<String, Object> locationMap = Map.of(
-                "idRegiao", 1,
-                "idAreaAviso", "AV001",
-                "idConcelho", 101,
-                "globalIdLocal", 123,
-                "latitude", "40.0",
-                "idDistrito", 10,
-                "local", "Aveiro",
-                "longitude", "-8.0"
-        );
-
-        ResponseEntity<List<Map<String, Object>>> response =
-                new ResponseEntity<>(List.of(locationMap), HttpStatus.OK);
-
-        when(restTemplate.exchange(
-                eq("http://api.ipma.pt/open-data/distrits-islands.json"),  // BASE_URL_LOCATIONS
-                eq(org.springframework.http.HttpMethod.GET),
-                isNull(),
-                ArgumentMatchers.<ParameterizedTypeReference<List<Map<String, Object>>>>any())
-        ).thenReturn(response);
-
-    }
-
-    @Test
     void testGetForecastById_apiError() {
         int locationId = 999999;
         when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))

@@ -51,6 +51,7 @@ public class UserMeal {
     @Column(name = "code", nullable = false, length = 50)
     private String code;
 
+    @SuppressWarnings("all")
     @PrePersist
     private void generateCode() {
         String input = user.getId().toString() + meal.getId().toString();
